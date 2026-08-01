@@ -73,11 +73,12 @@ function Expenses() {
       toast.error("Enter a positive amount");
       return;
     }
+    const trimmed = note.trim().slice(0, 140);
     await add.mutateAsync({
       category,
       amount: value,
-      note: note.trim().slice(0, 140) || undefined,
       spent_on: spentOn,
+      ...(trimmed ? { note: trimmed } : {}),
     });
     setAmount("");
     setNote("");
