@@ -5,7 +5,9 @@ import {
   Receipt,
   PieChart,
   Target,
-  Settings,
+  LineChart,
+  Newspaper,
+  Radar,
   LogOut,
   Moon,
   Sun,
@@ -18,12 +20,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV = [
+  { to: "/market", label: "Market Intelligence", icon: LineChart },
+  { to: "/news", label: "News Intelligence", icon: Newspaper },
+  { to: "/discovery", label: "Stock Discovery", icon: Radar },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/salary", label: "Salary planner", icon: Wallet },
   { to: "/expenses", label: "Expenses", icon: Receipt },
   { to: "/budget", label: "Budget", icon: PieChart },
   { to: "/goals", label: "Goals", icon: Target },
-  { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
 function useTheme() {
