@@ -219,6 +219,54 @@ export type PortfolioAlerts = {
   summary: string;
 };
 
+export type EconomicCalendar = {
+  groups: {
+    group: string;
+    events: { date: string; title: string; detail: string; impact: "high" | "medium" | "low" }[];
+  }[];
+  disclaimer: string;
+};
+
+export const generateEconomicCalendar = createServerFn({ method: "POST" })
+  .inputValidator((input: { today: string }) => ({ today: String(input.today).slice(0, 40) }))
+  .handler(async ({ data }): Promise<EconomicCalendar> => {
+    const { aiJson, strictObject } = await import("./ai-gateway.server");
+    return aiJson<EconomicCalendar>({
+      system: DISCLAIMER,
+      prompt: `Today is ${data.today}. Build a forward-looking economic and corporate calendar for the next 6 weeks relevant to Indian and US markets. Use these groups exactly: "RBI meetings", "Federal Reserve meetings", "GDP releases", "Inflation data", "Employment reports", "Company earnings", "Dividend dates", "IPO calendar". Give 2-5 events per group with ISO dates. Where a date is scheduled but not officially confirmed, say so in the detail.`,
+      schemaName: "economic_calendar",
+      schema: strictObject({
+        groups: {
+          type: "array",
+          items: strictObject({
+            group: { type: "string" },
+            events: {
+              type: "array",
+              items: strictObject({
+                date: { type: "string" },
+                title: { type: "string" },
+                detail: { type: "string" },
+                impact: { type: "string", enum: ["high", "medium", "low"] },
+              }),
+            },
+          }),
+        },
+        disclaimer: { type: "string" },
+      }),
+    });
+  });
+
+type _PortfolioAlertsLegacy = {
+  alerts: {
+    symbol: string;
+    type: string;
+    severity: "high" | "medium" | "low";
+    message: string;
+    action: string;
+  }[];
+  summary: string;
+};
+
 export const advisePortfolio = createServerFn({ method: "POST" })
   .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
   .handler(async ({ data }): Promise<PortfolioAlerts> => {
