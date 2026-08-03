@@ -15,9 +15,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedBudgetRouteImport } from './routes/_authenticated/budget'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDiscoveryRouteImport } from './routes/_authenticated/discovery'
 import { Route as AuthenticatedExpensesRouteImport } from './routes/_authenticated/expenses'
 import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
 import { Route as AuthenticatedMarketRouteImport } from './routes/_authenticated/market'
+import { Route as AuthenticatedNewsRouteImport } from './routes/_authenticated/news'
 import { Route as AuthenticatedSalaryRouteImport } from './routes/_authenticated/salary'
 
 const IndexRoute = IndexRouteImport.update({
@@ -49,6 +51,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDiscoveryRoute = AuthenticatedDiscoveryRouteImport.update({
+  id: '/discovery',
+  path: '/discovery',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedExpensesRoute = AuthenticatedExpensesRouteImport.update({
   id: '/expenses',
   path: '/expenses',
@@ -64,6 +71,11 @@ const AuthenticatedMarketRoute = AuthenticatedMarketRouteImport.update({
   path: '/market',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedNewsRoute = AuthenticatedNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSalaryRoute = AuthenticatedSalaryRouteImport.update({
   id: '/salary',
   path: '/salary',
@@ -76,9 +88,11 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/budget': typeof AuthenticatedBudgetRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/discovery': typeof AuthenticatedDiscoveryRoute
   '/expenses': typeof AuthenticatedExpensesRoute
   '/goals': typeof AuthenticatedGoalsRoute
   '/market': typeof AuthenticatedMarketRoute
+  '/news': typeof AuthenticatedNewsRoute
   '/salary': typeof AuthenticatedSalaryRoute
 }
 export interface FileRoutesByTo {
@@ -87,9 +101,11 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/budget': typeof AuthenticatedBudgetRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/discovery': typeof AuthenticatedDiscoveryRoute
   '/expenses': typeof AuthenticatedExpensesRoute
   '/goals': typeof AuthenticatedGoalsRoute
   '/market': typeof AuthenticatedMarketRoute
+  '/news': typeof AuthenticatedNewsRoute
   '/salary': typeof AuthenticatedSalaryRoute
 }
 export interface FileRoutesById {
@@ -100,9 +116,11 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/budget': typeof AuthenticatedBudgetRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/discovery': typeof AuthenticatedDiscoveryRoute
   '/_authenticated/expenses': typeof AuthenticatedExpensesRoute
   '/_authenticated/goals': typeof AuthenticatedGoalsRoute
   '/_authenticated/market': typeof AuthenticatedMarketRoute
+  '/_authenticated/news': typeof AuthenticatedNewsRoute
   '/_authenticated/salary': typeof AuthenticatedSalaryRoute
 }
 export interface FileRouteTypes {
@@ -113,9 +131,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/budget'
     | '/dashboard'
+    | '/discovery'
     | '/expenses'
     | '/goals'
     | '/market'
+    | '/news'
     | '/salary'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -124,9 +144,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/budget'
     | '/dashboard'
+    | '/discovery'
     | '/expenses'
     | '/goals'
     | '/market'
+    | '/news'
     | '/salary'
   id:
     | '__root__'
@@ -136,9 +158,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/budget'
     | '/_authenticated/dashboard'
+    | '/_authenticated/discovery'
     | '/_authenticated/expenses'
     | '/_authenticated/goals'
     | '/_authenticated/market'
+    | '/_authenticated/news'
     | '/_authenticated/salary'
   fileRoutesById: FileRoutesById
 }
@@ -193,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/discovery': {
+      id: '/_authenticated/discovery'
+      path: '/discovery'
+      fullPath: '/discovery'
+      preLoaderRoute: typeof AuthenticatedDiscoveryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/expenses': {
       id: '/_authenticated/expenses'
       path: '/expenses'
@@ -214,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMarketRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/news': {
+      id: '/_authenticated/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof AuthenticatedNewsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/salary': {
       id: '/_authenticated/salary'
       path: '/salary'
@@ -227,18 +265,22 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedBudgetRoute: typeof AuthenticatedBudgetRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDiscoveryRoute: typeof AuthenticatedDiscoveryRoute
   AuthenticatedExpensesRoute: typeof AuthenticatedExpensesRoute
   AuthenticatedGoalsRoute: typeof AuthenticatedGoalsRoute
   AuthenticatedMarketRoute: typeof AuthenticatedMarketRoute
+  AuthenticatedNewsRoute: typeof AuthenticatedNewsRoute
   AuthenticatedSalaryRoute: typeof AuthenticatedSalaryRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBudgetRoute: AuthenticatedBudgetRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDiscoveryRoute: AuthenticatedDiscoveryRoute,
   AuthenticatedExpensesRoute: AuthenticatedExpensesRoute,
   AuthenticatedGoalsRoute: AuthenticatedGoalsRoute,
   AuthenticatedMarketRoute: AuthenticatedMarketRoute,
+  AuthenticatedNewsRoute: AuthenticatedNewsRoute,
   AuthenticatedSalaryRoute: AuthenticatedSalaryRoute,
 }
 
