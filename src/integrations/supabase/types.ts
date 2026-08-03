@@ -140,6 +140,39 @@ export type Database = {
         }
         Relationships: []
       }
+      holdings: {
+        Row: {
+          avg_price: number
+          created_at: string
+          id: string
+          kind: string
+          name: string
+          quantity: number
+          symbol: string
+          user_id: string
+        }
+        Insert: {
+          avg_price?: number
+          created_at?: string
+          id?: string
+          kind?: string
+          name?: string
+          quantity?: number
+          symbol: string
+          user_id: string
+        }
+        Update: {
+          avg_price?: number
+          created_at?: string
+          id?: string
+          kind?: string
+          name?: string
+          quantity?: number
+          symbol?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       income_sources: {
         Row: {
           created_at: string
@@ -194,6 +227,71 @@ export type Database = {
           onboarded?: boolean
           risk_profile?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      watchlist_items: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          stop_loss: number | null
+          symbol: string
+          target_price: number | null
+          user_id: string
+          watchlist_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          stop_loss?: number | null
+          symbol: string
+          target_price?: number | null
+          user_id: string
+          watchlist_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          stop_loss?: number | null
+          symbol?: string
+          target_price?: number | null
+          user_id?: string
+          watchlist_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "watchlist_items_watchlist_id_fkey"
+            columns: ["watchlist_id"]
+            isOneToOne: false
+            referencedRelation: "watchlists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      watchlists: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
         }
         Relationships: []
       }
