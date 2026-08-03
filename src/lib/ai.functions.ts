@@ -256,17 +256,6 @@ export const generateEconomicCalendar = createServerFn({ method: "POST" })
     });
   });
 
-type _PortfolioAlertsLegacy = {
-  alerts: {
-    symbol: string;
-    type: string;
-    severity: "high" | "medium" | "low";
-    message: string;
-    action: string;
-  }[];
-  summary: string;
-};
-
 export const advisePortfolio = createServerFn({ method: "POST" })
   .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
   .handler(async ({ data }): Promise<PortfolioAlerts> => {
