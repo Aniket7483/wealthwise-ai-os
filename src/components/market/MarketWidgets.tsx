@@ -134,7 +134,7 @@ export function Metric({
 }: {
   label: string;
   value: string;
-  hint?: string;
+  hint?: string | undefined;
 }) {
   return (
     <div className="rounded-lg border border-border/60 bg-card/40 px-3 py-2">
