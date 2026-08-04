@@ -16,6 +16,13 @@ type ChartResponse = {
 };
 
 export type History = { date: string; close: number }[];
+export type CandleRow = {
+  date: string;
+  close: number;
+  high: number;
+  low: number;
+  volume: number;
+};
 
 function pctBetween(from: number | undefined, to: number) {
   if (!from || !Number.isFinite(from) || from === 0) return 0;
