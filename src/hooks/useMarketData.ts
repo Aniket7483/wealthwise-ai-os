@@ -6,6 +6,7 @@ import {
   getMarketOverview,
   getQuotesFor,
   getStockBoard,
+  getStockDossier,
   getSymbolDetail,
   searchSymbols,
 } from "@/lib/market.functions";
@@ -77,6 +78,16 @@ export function useQuotesFor(symbols: { symbol: string; name: string }[]) {
     queryFn: () => fn({ data: { symbols } }),
     enabled: symbols.length > 0,
     staleTime: 60_000,
+  });
+}
+
+export function useStockDossier(symbol: string, name = "") {
+  const fn = useServerFn(getStockDossier);
+  return useQuery({
+    queryKey: ["stock-dossier", symbol],
+    queryFn: () => fn({ data: { symbol, name } }),
+    enabled: symbol.trim().length > 0,
+    staleTime: FIVE_MIN,
   });
 }
 

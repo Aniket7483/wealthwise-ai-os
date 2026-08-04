@@ -1,6 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { MARKET_GROUPS, STOCK_UNIVERSE, OVERVIEW_SYMBOLS } from "./market";
-import { fetchNews, fetchQuote, fetchQuotes, searchYahoo } from "./market.server";
+import {
+  fetchCandles,
+  fetchFundamentals,
+  fetchNews,
+  fetchQuote,
+  fetchQuotes,
+  searchYahoo,
+} from "./market.server";
 
 export const getMarketOverview = createServerFn({ method: "GET" }).handler(async () => {
   const quotes = await fetchQuotes(OVERVIEW_SYMBOLS);
@@ -61,3 +68,27 @@ export const getFinancialNews = createServerFn({ method: "POST" })
     const items = await fetchNews(query, 30);
     return { fetchedAt: new Date().toISOString(), items };
   });
+
+/** Full research dossier: 5y candles + fundamentals + recent company news. */
+export const getStockDossier = createServerFn({ method: "POST" })
+  .inputValidator((input: { symbol: string; name?: string }) => ({
+    symbol: String(input.symbol).slice(0, 24),
+    name: String(input.name ?? "").slice(0, 120),
+  }))
+  .handler(async ({ data }) => {
+    const [quote, candles, fundamentals, news] = await Promise.all([
+      fetchQuote(data.symbol, data.name || data.symbol, "1y"),
+      fetchCandles(data.symbol, "5y"),
+      fetchFundamentals(data.symbol),
+      fetchNews(`${data.name || data.symbol} stock when:14d`, 8),
+    ]);
+    const { history: _history, ...rest } = quote;
+    return { fetchedAt: new Date().toISOString(), quote: rest, candles, fundamentals, news };
+  });
+
+export const getCandlesFor = createServerFn({ method: "POST" })
+  .inputValidator((input: { symbol: string; range?: string }) => ({
+    symbol: String(input.symbol).slice(0, 24),
+    range: String(input.range ?? "2y").slice(0, 6),
+  }))
+  .handler(async ({ data }) => ({ candles: await fetchCandles(data.symbol, data.range) }));

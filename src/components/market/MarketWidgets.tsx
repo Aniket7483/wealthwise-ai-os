@@ -127,6 +127,80 @@ export function DataSource({ label }: { label: string }) {
   return <p className="text-[11px] text-muted-foreground">Source: {label}</p>;
 }
 
+export function Metric({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: string;
+  hint?: string | undefined;
+}) {
+  return (
+    <div className="rounded-lg border border-border/60 bg-card/40 px-3 py-2">
+      <p className="text-[10px] tracking-wide text-muted-foreground uppercase">{label}</p>
+      <p className="num mt-0.5 text-sm font-semibold">{value}</p>
+      {hint ? <p className="mt-0.5 text-[10px] text-muted-foreground">{hint}</p> : null}
+    </div>
+  );
+}
+
+export function Meter({
+  label,
+  value,
+  caption,
+  tone = "brand",
+}: {
+  label: string;
+  value: number;
+  caption?: string;
+  tone?: "brand" | "positive" | "negative" | "warning";
+}) {
+  const bar = {
+    brand: "bg-primary",
+    positive: "bg-emerald-500",
+    negative: "bg-rose-500",
+    warning: "bg-amber-500",
+  }[tone];
+  const safe = Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : 0;
+  return (
+    <div className="rounded-lg border border-border/60 bg-card/40 p-3">
+      <div className="flex items-baseline justify-between">
+        <p className="text-xs font-medium">{label}</p>
+        <p className="num text-sm font-semibold">{Math.round(safe)}</p>
+      </div>
+      <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
+        <div className={cn("h-full rounded-full transition-all", bar)} style={{ width: `${safe}%` }} />
+      </div>
+      {caption ? <p className="mt-1 text-[10px] text-muted-foreground">{caption}</p> : null}
+    </div>
+  );
+}
+
+export function formatCompact(value: number | null | undefined, currency = "INR") {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  const symbol = currency === "INR" ? "₹" : currency === "USD" ? "$" : "";
+  const abs = Math.abs(value);
+  if (currency === "INR") {
+    if (abs >= 1e12) return `${symbol}${(value / 1e12).toFixed(2)} L Cr`;
+    if (abs >= 1e7) return `${symbol}${(value / 1e7).toFixed(2)} Cr`;
+    if (abs >= 1e5) return `${symbol}${(value / 1e5).toFixed(2)} L`;
+  }
+  if (abs >= 1e9) return `${symbol}${(value / 1e9).toFixed(2)}B`;
+  if (abs >= 1e6) return `${symbol}${(value / 1e6).toFixed(2)}M`;
+  return `${symbol}${value.toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
+}
+
+export function formatRatio(value: number | null | undefined, digits = 2) {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  return value.toFixed(digits);
+}
+
+export function formatPercentValue(value: number | null | undefined, alreadyPct = false) {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "—";
+  return `${(alreadyPct ? value : value * 100).toFixed(2)}%`;
+}
+
 export function Bullets({ title, items }: { title: string; items: string[] }) {
   if (!items?.length) return null;
   return (
