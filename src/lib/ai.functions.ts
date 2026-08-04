@@ -279,3 +279,265 @@ export const advisePortfolio = createServerFn({ method: "POST" })
       }),
     });
   });
+
+/* ---------------- Research centre: long-term thesis ---------------- */
+
+export type LongTermReport = {
+  businessQuality: string;
+  managementQuality: string;
+  competitiveAdvantage: string;
+  financialStrength: string;
+  growthPotential: string;
+  innovation: string;
+  riskLevel: string;
+  historicalConsistency: string;
+  sectorOutlook: string;
+  valuationAnalysis: string;
+  futureGrowthDrivers: string[];
+  potentialChallenges: string[];
+  investmentThesis: string;
+  disclaimer: string;
+};
+
+export const longTermReport = createServerFn({ method: "POST" })
+  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
+  .handler(async ({ data }): Promise<LongTermReport> => {
+    const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
+    return aiJson<LongTermReport>({
+      system: DISCLAIMER,
+      prompt: `Write a long-term investment research note using this live data plus your public knowledge of the company. Where a figure is not in the live data, say it is an approximate public estimate.\n\n${data.context}`,
+      schemaName: "long_term_report",
+      schema: strictObject({
+        businessQuality: { type: "string" },
+        managementQuality: { type: "string" },
+        competitiveAdvantage: { type: "string" },
+        financialStrength: { type: "string" },
+        growthPotential: { type: "string" },
+        innovation: { type: "string" },
+        riskLevel: { type: "string" },
+        historicalConsistency: { type: "string" },
+        sectorOutlook: { type: "string" },
+        valuationAnalysis: { type: "string" },
+        futureGrowthDrivers: strArray,
+        potentialChallenges: strArray,
+        investmentThesis: { type: "string" },
+        disclaimer: { type: "string" },
+      }),
+    });
+  });
+
+/* ---------------- Chart interpretation ---------------- */
+
+export type ChartRead = { plainEnglish: string; observations: string[]; caution: string };
+
+export const interpretChart = createServerFn({ method: "POST" })
+  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 4000) }))
+  .handler(async ({ data }): Promise<ChartRead> => {
+    const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
+    return aiJson<ChartRead>({
+      system: DISCLAIMER,
+      prompt: `Explain this technical picture in plain English, in the style: "The stock is trading above major moving averages. Momentum remains positive. Support appears near X. Resistance is near Y." Use only the numbers given.\n\n${data.context}`,
+      schemaName: "chart_read",
+      schema: strictObject({
+        plainEnglish: { type: "string" },
+        observations: strArray,
+        caution: { type: "string" },
+      }),
+    });
+  });
+
+/* ---------------- Valuation lab ---------------- */
+
+export type ValuationView = {
+  verdict: "Undervalued" | "Fairly valued" | "Premium valuation";
+  verdictReason: string;
+  intrinsicValue: string;
+  marginOfSafety: string;
+  dcf: string;
+  peComparison: string;
+  evEbitda: string;
+  peg: string;
+  historicalValuation: string;
+  sectorComparison: string;
+  assumptions: string[];
+  disclaimer: string;
+};
+
+export const valuationLab = createServerFn({ method: "POST" })
+  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 6000) }))
+  .handler(async ({ data }): Promise<ValuationView> => {
+    const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
+    return aiJson<ValuationView>({
+      system: DISCLAIMER,
+      prompt: `Run a valuation review. Sketch a simple DCF (state every assumption), compare P/E, EV/EBITDA and PEG with the sector, discuss the historical valuation band and give an intrinsic value range plus margin of safety. Be explicit that estimates are illustrative.\n\n${data.context}`,
+      schemaName: "valuation_view",
+      schema: strictObject({
+        verdict: { type: "string", enum: ["Undervalued", "Fairly valued", "Premium valuation"] },
+        verdictReason: { type: "string" },
+        intrinsicValue: { type: "string" },
+        marginOfSafety: { type: "string" },
+        dcf: { type: "string" },
+        peComparison: { type: "string" },
+        evEbitda: { type: "string" },
+        peg: { type: "string" },
+        historicalValuation: { type: "string" },
+        sectorComparison: { type: "string" },
+        assumptions: strArray,
+        disclaimer: { type: "string" },
+      }),
+    });
+  });
+
+/* ---------------- Forecast explanation ---------------- */
+
+export type ForecastNarrative = {
+  summary: string;
+  keyFactors: { factor: string; effect: string }[];
+  bestCase: string;
+  baseCase: string;
+  worstCase: string;
+  whatWouldChangeIt: string[];
+  disclaimer: string;
+};
+
+export const explainForecast = createServerFn({ method: "POST" })
+  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 6000) }))
+  .handler(async ({ data }): Promise<ForecastNarrative> => {
+    const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
+    return aiJson<ForecastNarrative>({
+      system: DISCLAIMER,
+      prompt: `These probability ranges come from a statistical drift-and-volatility model on live prices. Explain the factors shaping the outlook (earnings trend, valuation, momentum, institutions, sector, macro, news sentiment) and describe best/base/worst scenarios. Never present the numbers as predictions of certainty.\n\n${data.context}`,
+      schemaName: "forecast_narrative",
+      schema: strictObject({
+        summary: { type: "string" },
+        keyFactors: {
+          type: "array",
+          items: strictObject({ factor: { type: "string" }, effect: { type: "string" } }),
+        },
+        bestCase: { type: "string" },
+        baseCase: { type: "string" },
+        worstCase: { type: "string" },
+        whatWouldChangeIt: strArray,
+        disclaimer: { type: "string" },
+      }),
+    });
+  });
+
+/* ---------------- Comparison ---------------- */
+
+export type ComparisonView = {
+  summary: string;
+  verdicts: { symbol: string; strengths: string; watchOuts: string }[];
+  bestForGrowth: string;
+  bestForStability: string;
+  bestForValue: string;
+  disclaimer: string;
+};
+
+export const compareCompanies = createServerFn({ method: "POST" })
+  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
+  .handler(async ({ data }): Promise<ComparisonView> => {
+    const { aiJson, strictObject } = await import("./ai-gateway.server");
+    return aiJson<ComparisonView>({
+      system: DISCLAIMER,
+      prompt: `Compare these companies on the metrics provided. Explain the trade-offs rather than picking a winner to buy.\n\n${data.context}`,
+      schemaName: "comparison_view",
+      schema: strictObject({
+        summary: { type: "string" },
+        verdicts: {
+          type: "array",
+          items: strictObject({
+            symbol: { type: "string" },
+            strengths: { type: "string" },
+            watchOuts: { type: "string" },
+          }),
+        },
+        bestForGrowth: { type: "string" },
+        bestForStability: { type: "string" },
+        bestForValue: { type: "string" },
+        disclaimer: { type: "string" },
+      }),
+    });
+  });
+
+/* ---------------- Portfolio & expense intelligence ---------------- */
+
+export type PortfolioReview = {
+  summary: string;
+  strengths: string[];
+  concentrationRisks: string[];
+  diversificationIdeas: string[];
+  characteristics: string[];
+  healthNote: string;
+  disclaimer: string;
+};
+
+export const reviewPortfolio = createServerFn({ method: "POST" })
+  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
+  .handler(async ({ data }): Promise<PortfolioReview> => {
+    const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
+    return aiJson<PortfolioReview>({
+      system: DISCLAIMER,
+      prompt: `Review this portfolio's composition, allocation, risk and diversification. Describe characteristics and options — no buy/sell instructions.\n\n${data.context}`,
+      schemaName: "portfolio_review",
+      schema: strictObject({
+        summary: { type: "string" },
+        strengths: strArray,
+        concentrationRisks: strArray,
+        diversificationIdeas: strArray,
+        characteristics: strArray,
+        healthNote: { type: "string" },
+        disclaimer: { type: "string" },
+      }),
+    });
+  });
+
+export type ExpenseIntel = {
+  summary: string;
+  overspending: string[];
+  recurring: string[];
+  trends: string[];
+  suggestions: string[];
+};
+
+export const analyseExpenses = createServerFn({ method: "POST" })
+  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
+  .handler(async ({ data }): Promise<ExpenseIntel> => {
+    const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
+    return aiJson<ExpenseIntel>({
+      system:
+        "You are a personal finance coach. Be practical, specific and encouraging. Never shame the user. Amounts are in the user's own currency.",
+      prompt: `Analyse this spending data: flag likely overspending, detect recurring payments and subscriptions, describe monthly/yearly trends and give practical suggestions.\n\n${data.context}`,
+      schemaName: "expense_intel",
+      schema: strictObject({
+        summary: { type: "string" },
+        overspending: strArray,
+        recurring: strArray,
+        trends: strArray,
+        suggestions: strArray,
+      }),
+    });
+  });
+
+/* ---------------- AI assistant ---------------- */
+
+export type AssistantReply = { answer: string; bullets: string[]; followUps: string[] };
+
+export const askAssistant = createServerFn({ method: "POST" })
+  .inputValidator((input: { question: string; context: string }) => ({
+    question: String(input.question).slice(0, 1200),
+    context: String(input.context ?? "").slice(0, 10000),
+  }))
+  .handler(async ({ data }): Promise<AssistantReply> => {
+    const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
+    return aiJson<AssistantReply>({
+      system: `${DISCLAIMER} You are the in-app financial assistant for AI Wealth OS. Answer using the live app context supplied where relevant, and say when something is outside the data you were given.`,
+      prompt: `App context (live data and the user's own records):\n${data.context}\n\nConversation so far and the latest question:\n${data.question}\n\nAnswer clearly, then give up to 4 supporting bullets and up to 3 useful follow-up questions.`,
+      schemaName: "assistant_reply",
+      schema: strictObject({
+        answer: { type: "string" },
+        bullets: strArray,
+        followUps: strArray,
+      }),
+    });
+  });
