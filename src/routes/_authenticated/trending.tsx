@@ -196,7 +196,7 @@ function TrendingPage() {
                 <SectionCard
                   key={bucket.key}
                   title={bucket.label}
-                  action={<Pill tone="brand">{rows.length}</Pill>}
+                  actions={<Pill tone="brand">{rows.length}</Pill>}
                 >
                   <p className="mb-2 text-[11px] text-muted-foreground">{bucket.hint}</p>
                   {rows.length === 0 ? (
