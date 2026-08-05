@@ -18,12 +18,14 @@ import { Route as AuthenticatedCompareRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDiscoveryRouteImport } from './routes/_authenticated/discovery'
 import { Route as AuthenticatedExpensesRouteImport } from './routes/_authenticated/expenses'
+import { Route as AuthenticatedGlobalRouteImport } from './routes/_authenticated/global'
 import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
 import { Route as AuthenticatedMarketRouteImport } from './routes/_authenticated/market'
 import { Route as AuthenticatedNewsRouteImport } from './routes/_authenticated/news'
 import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
 import { Route as AuthenticatedResearchRouteImport } from './routes/_authenticated/research'
 import { Route as AuthenticatedSalaryRouteImport } from './routes/_authenticated/salary'
+import { Route as AuthenticatedSectorsRouteImport } from './routes/_authenticated/sectors'
 import { Route as AuthenticatedTrendingRouteImport } from './routes/_authenticated/trending'
 
 const IndexRoute = IndexRouteImport.update({
@@ -70,6 +72,11 @@ const AuthenticatedExpensesRoute = AuthenticatedExpensesRouteImport.update({
   path: '/expenses',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedGlobalRoute = AuthenticatedGlobalRouteImport.update({
+  id: '/global',
+  path: '/global',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedGoalsRoute = AuthenticatedGoalsRouteImport.update({
   id: '/goals',
   path: '/goals',
@@ -100,6 +107,11 @@ const AuthenticatedSalaryRoute = AuthenticatedSalaryRouteImport.update({
   path: '/salary',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSectorsRoute = AuthenticatedSectorsRouteImport.update({
+  id: '/sectors',
+  path: '/sectors',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedTrendingRoute = AuthenticatedTrendingRouteImport.update({
   id: '/trending',
   path: '/trending',
@@ -115,12 +127,14 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/discovery': typeof AuthenticatedDiscoveryRoute
   '/expenses': typeof AuthenticatedExpensesRoute
+  '/global': typeof AuthenticatedGlobalRoute
   '/goals': typeof AuthenticatedGoalsRoute
   '/market': typeof AuthenticatedMarketRoute
   '/news': typeof AuthenticatedNewsRoute
   '/portfolio': typeof AuthenticatedPortfolioRoute
   '/research': typeof AuthenticatedResearchRoute
   '/salary': typeof AuthenticatedSalaryRoute
+  '/sectors': typeof AuthenticatedSectorsRoute
   '/trending': typeof AuthenticatedTrendingRoute
 }
 export interface FileRoutesByTo {
@@ -132,12 +146,14 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/discovery': typeof AuthenticatedDiscoveryRoute
   '/expenses': typeof AuthenticatedExpensesRoute
+  '/global': typeof AuthenticatedGlobalRoute
   '/goals': typeof AuthenticatedGoalsRoute
   '/market': typeof AuthenticatedMarketRoute
   '/news': typeof AuthenticatedNewsRoute
   '/portfolio': typeof AuthenticatedPortfolioRoute
   '/research': typeof AuthenticatedResearchRoute
   '/salary': typeof AuthenticatedSalaryRoute
+  '/sectors': typeof AuthenticatedSectorsRoute
   '/trending': typeof AuthenticatedTrendingRoute
 }
 export interface FileRoutesById {
@@ -151,12 +167,14 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/discovery': typeof AuthenticatedDiscoveryRoute
   '/_authenticated/expenses': typeof AuthenticatedExpensesRoute
+  '/_authenticated/global': typeof AuthenticatedGlobalRoute
   '/_authenticated/goals': typeof AuthenticatedGoalsRoute
   '/_authenticated/market': typeof AuthenticatedMarketRoute
   '/_authenticated/news': typeof AuthenticatedNewsRoute
   '/_authenticated/portfolio': typeof AuthenticatedPortfolioRoute
   '/_authenticated/research': typeof AuthenticatedResearchRoute
   '/_authenticated/salary': typeof AuthenticatedSalaryRoute
+  '/_authenticated/sectors': typeof AuthenticatedSectorsRoute
   '/_authenticated/trending': typeof AuthenticatedTrendingRoute
 }
 export interface FileRouteTypes {
@@ -170,12 +188,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discovery'
     | '/expenses'
+    | '/global'
     | '/goals'
     | '/market'
     | '/news'
     | '/portfolio'
     | '/research'
     | '/salary'
+    | '/sectors'
     | '/trending'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -187,12 +207,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/discovery'
     | '/expenses'
+    | '/global'
     | '/goals'
     | '/market'
     | '/news'
     | '/portfolio'
     | '/research'
     | '/salary'
+    | '/sectors'
     | '/trending'
   id:
     | '__root__'
@@ -205,12 +227,14 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/discovery'
     | '/_authenticated/expenses'
+    | '/_authenticated/global'
     | '/_authenticated/goals'
     | '/_authenticated/market'
     | '/_authenticated/news'
     | '/_authenticated/portfolio'
     | '/_authenticated/research'
     | '/_authenticated/salary'
+    | '/_authenticated/sectors'
     | '/_authenticated/trending'
   fileRoutesById: FileRoutesById
 }
@@ -286,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedExpensesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/global': {
+      id: '/_authenticated/global'
+      path: '/global'
+      fullPath: '/global'
+      preLoaderRoute: typeof AuthenticatedGlobalRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/goals': {
       id: '/_authenticated/goals'
       path: '/goals'
@@ -328,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSalaryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/sectors': {
+      id: '/_authenticated/sectors'
+      path: '/sectors'
+      fullPath: '/sectors'
+      preLoaderRoute: typeof AuthenticatedSectorsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/trending': {
       id: '/_authenticated/trending'
       path: '/trending'
@@ -344,12 +382,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDiscoveryRoute: typeof AuthenticatedDiscoveryRoute
   AuthenticatedExpensesRoute: typeof AuthenticatedExpensesRoute
+  AuthenticatedGlobalRoute: typeof AuthenticatedGlobalRoute
   AuthenticatedGoalsRoute: typeof AuthenticatedGoalsRoute
   AuthenticatedMarketRoute: typeof AuthenticatedMarketRoute
   AuthenticatedNewsRoute: typeof AuthenticatedNewsRoute
   AuthenticatedPortfolioRoute: typeof AuthenticatedPortfolioRoute
   AuthenticatedResearchRoute: typeof AuthenticatedResearchRoute
   AuthenticatedSalaryRoute: typeof AuthenticatedSalaryRoute
+  AuthenticatedSectorsRoute: typeof AuthenticatedSectorsRoute
   AuthenticatedTrendingRoute: typeof AuthenticatedTrendingRoute
 }
 
@@ -359,12 +399,14 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDiscoveryRoute: AuthenticatedDiscoveryRoute,
   AuthenticatedExpensesRoute: AuthenticatedExpensesRoute,
+  AuthenticatedGlobalRoute: AuthenticatedGlobalRoute,
   AuthenticatedGoalsRoute: AuthenticatedGoalsRoute,
   AuthenticatedMarketRoute: AuthenticatedMarketRoute,
   AuthenticatedNewsRoute: AuthenticatedNewsRoute,
   AuthenticatedPortfolioRoute: AuthenticatedPortfolioRoute,
   AuthenticatedResearchRoute: AuthenticatedResearchRoute,
   AuthenticatedSalaryRoute: AuthenticatedSalaryRoute,
+  AuthenticatedSectorsRoute: AuthenticatedSectorsRoute,
   AuthenticatedTrendingRoute: AuthenticatedTrendingRoute,
 }
 
@@ -380,13 +422,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
