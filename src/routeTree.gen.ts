@@ -29,6 +29,7 @@ import { Route as AuthenticatedResearchRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedSalaryRouteImport } from './routes/_authenticated/salary'
 import { Route as AuthenticatedSectorsRouteImport } from './routes/_authenticated/sectors'
 import { Route as AuthenticatedTrendingRouteImport } from './routes/_authenticated/trending'
+import { Route as AuthenticatedWatchlistRouteImport } from './routes/_authenticated/watchlist'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -129,6 +130,11 @@ const AuthenticatedTrendingRoute = AuthenticatedTrendingRouteImport.update({
   path: '/trending',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedWatchlistRoute = AuthenticatedWatchlistRouteImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/salary': typeof AuthenticatedSalaryRoute
   '/sectors': typeof AuthenticatedSectorsRoute
   '/trending': typeof AuthenticatedTrendingRoute
+  '/watchlist': typeof AuthenticatedWatchlistRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/salary': typeof AuthenticatedSalaryRoute
   '/sectors': typeof AuthenticatedSectorsRoute
   '/trending': typeof AuthenticatedTrendingRoute
+  '/watchlist': typeof AuthenticatedWatchlistRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/_authenticated/salary': typeof AuthenticatedSalaryRoute
   '/_authenticated/sectors': typeof AuthenticatedSectorsRoute
   '/_authenticated/trending': typeof AuthenticatedTrendingRoute
+  '/_authenticated/watchlist': typeof AuthenticatedWatchlistRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/salary'
     | '/sectors'
     | '/trending'
+    | '/watchlist'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -238,6 +248,7 @@ export interface FileRouteTypes {
     | '/salary'
     | '/sectors'
     | '/trending'
+    | '/watchlist'
   id:
     | '__root__'
     | '/'
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/_authenticated/salary'
     | '/_authenticated/sectors'
     | '/_authenticated/trending'
+    | '/_authenticated/watchlist'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -411,6 +423,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTrendingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/watchlist': {
+      id: '/_authenticated/watchlist'
+      path: '/watchlist'
+      fullPath: '/watchlist'
+      preLoaderRoute: typeof AuthenticatedWatchlistRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -431,6 +450,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSalaryRoute: typeof AuthenticatedSalaryRoute
   AuthenticatedSectorsRoute: typeof AuthenticatedSectorsRoute
   AuthenticatedTrendingRoute: typeof AuthenticatedTrendingRoute
+  AuthenticatedWatchlistRoute: typeof AuthenticatedWatchlistRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -450,6 +470,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSalaryRoute: AuthenticatedSalaryRoute,
   AuthenticatedSectorsRoute: AuthenticatedSectorsRoute,
   AuthenticatedTrendingRoute: AuthenticatedTrendingRoute,
+  AuthenticatedWatchlistRoute: AuthenticatedWatchlistRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
