@@ -14,12 +14,14 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedBudgetRouteImport } from './routes/_authenticated/budget'
+import { Route as AuthenticatedCompareRouteImport } from './routes/_authenticated/compare'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDiscoveryRouteImport } from './routes/_authenticated/discovery'
 import { Route as AuthenticatedExpensesRouteImport } from './routes/_authenticated/expenses'
 import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
 import { Route as AuthenticatedMarketRouteImport } from './routes/_authenticated/market'
 import { Route as AuthenticatedNewsRouteImport } from './routes/_authenticated/news'
+import { Route as AuthenticatedPortfolioRouteImport } from './routes/_authenticated/portfolio'
 import { Route as AuthenticatedResearchRouteImport } from './routes/_authenticated/research'
 import { Route as AuthenticatedSalaryRouteImport } from './routes/_authenticated/salary'
 import { Route as AuthenticatedTrendingRouteImport } from './routes/_authenticated/trending'
@@ -46,6 +48,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const AuthenticatedBudgetRoute = AuthenticatedBudgetRouteImport.update({
   id: '/budget',
   path: '/budget',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCompareRoute = AuthenticatedCompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -78,6 +85,11 @@ const AuthenticatedNewsRoute = AuthenticatedNewsRouteImport.update({
   path: '/news',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPortfolioRoute = AuthenticatedPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedResearchRoute = AuthenticatedResearchRouteImport.update({
   id: '/research',
   path: '/research',
@@ -99,12 +111,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/budget': typeof AuthenticatedBudgetRoute
+  '/compare': typeof AuthenticatedCompareRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/discovery': typeof AuthenticatedDiscoveryRoute
   '/expenses': typeof AuthenticatedExpensesRoute
   '/goals': typeof AuthenticatedGoalsRoute
   '/market': typeof AuthenticatedMarketRoute
   '/news': typeof AuthenticatedNewsRoute
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/research': typeof AuthenticatedResearchRoute
   '/salary': typeof AuthenticatedSalaryRoute
   '/trending': typeof AuthenticatedTrendingRoute
@@ -114,12 +128,14 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/budget': typeof AuthenticatedBudgetRoute
+  '/compare': typeof AuthenticatedCompareRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/discovery': typeof AuthenticatedDiscoveryRoute
   '/expenses': typeof AuthenticatedExpensesRoute
   '/goals': typeof AuthenticatedGoalsRoute
   '/market': typeof AuthenticatedMarketRoute
   '/news': typeof AuthenticatedNewsRoute
+  '/portfolio': typeof AuthenticatedPortfolioRoute
   '/research': typeof AuthenticatedResearchRoute
   '/salary': typeof AuthenticatedSalaryRoute
   '/trending': typeof AuthenticatedTrendingRoute
@@ -131,12 +147,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/budget': typeof AuthenticatedBudgetRoute
+  '/_authenticated/compare': typeof AuthenticatedCompareRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/discovery': typeof AuthenticatedDiscoveryRoute
   '/_authenticated/expenses': typeof AuthenticatedExpensesRoute
   '/_authenticated/goals': typeof AuthenticatedGoalsRoute
   '/_authenticated/market': typeof AuthenticatedMarketRoute
   '/_authenticated/news': typeof AuthenticatedNewsRoute
+  '/_authenticated/portfolio': typeof AuthenticatedPortfolioRoute
   '/_authenticated/research': typeof AuthenticatedResearchRoute
   '/_authenticated/salary': typeof AuthenticatedSalaryRoute
   '/_authenticated/trending': typeof AuthenticatedTrendingRoute
@@ -148,12 +166,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/budget'
+    | '/compare'
     | '/dashboard'
     | '/discovery'
     | '/expenses'
     | '/goals'
     | '/market'
     | '/news'
+    | '/portfolio'
     | '/research'
     | '/salary'
     | '/trending'
@@ -163,12 +183,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/budget'
+    | '/compare'
     | '/dashboard'
     | '/discovery'
     | '/expenses'
     | '/goals'
     | '/market'
     | '/news'
+    | '/portfolio'
     | '/research'
     | '/salary'
     | '/trending'
@@ -179,12 +201,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/budget'
+    | '/_authenticated/compare'
     | '/_authenticated/dashboard'
     | '/_authenticated/discovery'
     | '/_authenticated/expenses'
     | '/_authenticated/goals'
     | '/_authenticated/market'
     | '/_authenticated/news'
+    | '/_authenticated/portfolio'
     | '/_authenticated/research'
     | '/_authenticated/salary'
     | '/_authenticated/trending'
@@ -234,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBudgetRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/compare': {
+      id: '/_authenticated/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof AuthenticatedCompareRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -276,6 +307,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNewsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/portfolio': {
+      id: '/_authenticated/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof AuthenticatedPortfolioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/research': {
       id: '/_authenticated/research'
       path: '/research'
@@ -302,12 +340,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedBudgetRoute: typeof AuthenticatedBudgetRoute
+  AuthenticatedCompareRoute: typeof AuthenticatedCompareRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDiscoveryRoute: typeof AuthenticatedDiscoveryRoute
   AuthenticatedExpensesRoute: typeof AuthenticatedExpensesRoute
   AuthenticatedGoalsRoute: typeof AuthenticatedGoalsRoute
   AuthenticatedMarketRoute: typeof AuthenticatedMarketRoute
   AuthenticatedNewsRoute: typeof AuthenticatedNewsRoute
+  AuthenticatedPortfolioRoute: typeof AuthenticatedPortfolioRoute
   AuthenticatedResearchRoute: typeof AuthenticatedResearchRoute
   AuthenticatedSalaryRoute: typeof AuthenticatedSalaryRoute
   AuthenticatedTrendingRoute: typeof AuthenticatedTrendingRoute
@@ -315,12 +355,14 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBudgetRoute: AuthenticatedBudgetRoute,
+  AuthenticatedCompareRoute: AuthenticatedCompareRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDiscoveryRoute: AuthenticatedDiscoveryRoute,
   AuthenticatedExpensesRoute: AuthenticatedExpensesRoute,
   AuthenticatedGoalsRoute: AuthenticatedGoalsRoute,
   AuthenticatedMarketRoute: AuthenticatedMarketRoute,
   AuthenticatedNewsRoute: AuthenticatedNewsRoute,
+  AuthenticatedPortfolioRoute: AuthenticatedPortfolioRoute,
   AuthenticatedResearchRoute: AuthenticatedResearchRoute,
   AuthenticatedSalaryRoute: AuthenticatedSalaryRoute,
   AuthenticatedTrendingRoute: AuthenticatedTrendingRoute,
