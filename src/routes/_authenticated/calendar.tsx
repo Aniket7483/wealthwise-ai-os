@@ -71,7 +71,11 @@ function CalendarPage() {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Events ahead" value={String(upcoming.length)} tone="brand" hint="Next ~6 weeks" />
         <StatCard label="High impact" value={String(highImpact.length)} tone="warning" />
-        <StatCard label="Next event" value={upcoming[0] ? formatDate(upcoming[0].date) : "—"} hint={upcoming[0]?.title} />
+        <StatCard
+          label="Next event"
+          value={upcoming[0] ? formatDate(upcoming[0].date) : "—"}
+          hint={upcoming[0]?.title ?? "Awaiting schedule"}
+        />
         <StatCard label="Groups tracked" value={String(calendar.data?.groups.length ?? 0)} />
       </div>
 
