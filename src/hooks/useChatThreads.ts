@@ -52,12 +52,12 @@ export function useThreadMutations() {
   const qc = useQueryClient();
   const invalidateThreads = () => qc.invalidateQueries({ queryKey: ["chat_threads"] });
 
-  const createThread = useMutation({
-    mutationFn: async (title = "New conversation"): Promise<string> => {
+  const createThread = useMutation<string, Error, string | undefined>({
+    mutationFn: async (title) => {
       const uid = await currentUserId();
       const { data, error } = await supabase
         .from("chat_threads")
-        .insert({ user_id: uid, title })
+        .insert({ user_id: uid, title: title ?? "New conversation" })
         .select("id")
         .single();
       if (error) throw error;
