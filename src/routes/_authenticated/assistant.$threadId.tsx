@@ -124,8 +124,8 @@ function AssistantThread() {
       title="AI Assistant"
       description="Your personal CFO — grounded in your live market and finance data."
     >
-      <div className="grid gap-5 lg:grid-cols-[260px_1fr]">
-        <div className="lg:max-h-[70vh]">
+      <div className="grid min-w-0 gap-5 lg:grid-cols-[260px_minmax(0,1fr)]">
+        <div className="min-w-0 lg:max-h-[70vh]">
           <ThreadList
             threads={threads.data ?? []}
             activeId={threadId}
