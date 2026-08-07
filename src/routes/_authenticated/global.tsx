@@ -33,10 +33,13 @@ export const Route = createFileRoute("/_authenticated/global")({
 
 function GlobalPage() {
   const overview = useMarketOverview();
-  const groups = overview.data?.groups ?? [];
+  const groups = useMemo(() => overview.data?.groups ?? [], [overview.data]);
   const all: Quote[] = groups.flatMap((g) => g.quotes);
   const india = groups.find((g) => g.key === "india")?.quotes ?? [];
-  const globalQuotes = groups.find((g) => g.key === "global")?.quotes ?? [];
+  const globalQuotes = useMemo(
+    () => groups.find((g) => g.key === "global")?.quotes ?? [],
+    [groups],
+  );
 
   const breadth = useMemo(() => {
     const up = globalQuotes.filter((q) => q.changePct > 0).length;

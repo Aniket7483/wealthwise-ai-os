@@ -45,7 +45,7 @@ function Expenses() {
   const [filter, setFilter] = useState<string>("all");
 
   const thisMonth = monthKey(new Date());
-  const rows = expenses.data ?? [];
+  const rows = useMemo(() => expenses.data ?? [], [expenses.data]);
 
   const stats = useMemo(() => {
     const monthRows = rows.filter((r) => monthKey(r.spent_on) === thisMonth);

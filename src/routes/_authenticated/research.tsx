@@ -73,7 +73,7 @@ function ResearchPage() {
   const search = useSymbolSearch(query);
   const dossier = useStockDossier(selected.symbol, selected.name);
 
-  const candles = (dossier.data?.candles ?? []) as Candle[];
+  const candles = useMemo(() => (dossier.data?.candles ?? []) as Candle[], [dossier.data]);
   const quote = dossier.data?.quote;
   const fundamentals = dossier.data?.fundamentals;
   const currency = quote?.currency ?? "INR";

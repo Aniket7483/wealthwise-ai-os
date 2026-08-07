@@ -37,7 +37,7 @@ function InsightsPage() {
   const budgets = useBudgets();
   const income = useIncomeSources();
   const currency = profile.data?.currency ?? "INR";
-  const rows = expenses.data ?? [];
+  const rows = useMemo(() => expenses.data ?? [], [expenses.data]);
 
   const monthly = useMemo(() => {
     const map = new Map<string, number>();
