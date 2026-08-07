@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { CalendarDays } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
@@ -46,7 +46,9 @@ function CalendarPage() {
     retry: 0,
   });
 
-  if (calendar.error) toast.error((calendar.error as Error).message);
+  useEffect(() => {
+    if (calendar.error) toast.error((calendar.error as Error).message);
+  }, [calendar.error]);
 
   const upcoming = useMemo(() => {
     const events = (calendar.data?.groups ?? []).flatMap((g) =>
