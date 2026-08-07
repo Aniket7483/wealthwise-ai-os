@@ -322,22 +322,15 @@ function num(value: RawValue): number | null {
  * so callers must handle `available: false` and label figures accordingly.
  */
 export async function fetchFundamentals(symbol: string): Promise<Fundamentals> {
-  const modules =
-    "summaryProfile,summaryDetail,defaultKeyStatistics,financialData,majorHoldersBreakdown";
-  for (const host of ["query1", "query2"]) {
+  return cached(`fundamentals:${symbol}`, FUNDAMENTALS_TTL, async () => {
+    const modules =
+      "summaryProfile,summaryDetail,defaultKeyStatistics,financialData,majorHoldersBreakdown";
     try {
-      const res = await fetch(
-        `https://${host}.finance.yahoo.com/v10/finance/quoteSummary/${encodeURIComponent(
-          symbol,
-        )}?modules=${modules}`,
-        { headers: { "User-Agent": UA, Accept: "application/json" } },
-      );
-      if (!res.ok) continue;
-      const json = (await res.json()) as {
+      const json = await yahooJson<{
         quoteSummary?: { result?: Array<Record<string, Record<string, RawValue | string>>> };
-      };
-      const r = json.quoteSummary?.result?.[0];
-      if (!r) continue;
+      }>(`/v10/finance/quoteSummary/${encodeURIComponent(symbol)}`, { modules });
+      const r = json?.quoteSummary?.result?.[0];
+      if (!r) return emptyFundamentals;
       const profile = r['summaryProfile'] ?? {};
       const detail = r['summaryDetail'] ?? {};
       const stats = r['defaultKeyStatistics'] ?? {};
@@ -386,7 +379,7 @@ export async function fetchFundamentals(symbol: string): Promise<Fundamentals> {
       };
     } catch (error) {
       console.error("[market] fundamentals failed", symbol, error);
+      return emptyFundamentals;
     }
-  }
-  return emptyFundamentals;
+  });
 }
