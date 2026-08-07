@@ -61,12 +61,23 @@ export function formatMoney(value: number, currency = "INR") {
 }
 
 export function formatCompact(value: number, currency = "INR") {
-  return new Intl.NumberFormat(currency === "INR" ? "en-IN" : "en-US", {
+  const safe = Number.isFinite(value) ? value : 0;
+  if (currency === "INR") {
+    // en-IN compact renders 16,000 as "16T" — use Indian conventions instead.
+    const abs = Math.abs(safe);
+    const sign = safe < 0 ? "-" : "";
+    const round = (n: number) => (Math.abs(n) >= 100 ? Math.round(n) : Math.round(n * 10) / 10);
+    if (abs >= 1e7) return `${sign}₹${round(abs / 1e7)}Cr`;
+    if (abs >= 1e5) return `${sign}₹${round(abs / 1e5)}L`;
+    if (abs >= 1e3) return `${sign}₹${round(abs / 1e3)}K`;
+    return `${sign}₹${Math.round(abs)}`;
+  }
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
     notation: "compact",
     maximumFractionDigits: 1,
-  }).format(Number.isFinite(value) ? value : 0);
+  }).format(safe);
 }
 
 export function monthKey(date: Date | string) {

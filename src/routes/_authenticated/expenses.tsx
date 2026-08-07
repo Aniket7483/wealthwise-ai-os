@@ -45,7 +45,7 @@ function Expenses() {
   const [filter, setFilter] = useState<string>("all");
 
   const thisMonth = monthKey(new Date());
-  const rows = expenses.data ?? [];
+  const rows = useMemo(() => expenses.data ?? [], [expenses.data]);
 
   const stats = useMemo(() => {
     const monthRows = rows.filter((r) => monthKey(r.spent_on) === thisMonth);
@@ -88,7 +88,11 @@ function Expenses() {
   return (
     <AppShell title="Expenses" description="Fast logging, honest categories, clear totals.">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Spent this month" value={formatMoney(stats.monthTotal, currency)} tone="brand" />
+        <StatCard
+          label="Spent this month"
+          value={formatMoney(stats.monthTotal, currency)}
+          tone="brand"
+        />
         <StatCard label="Transactions" value={String(stats.count)} />
         <StatCard label="Daily average" value={formatMoney(stats.dailyAvg, currency)} />
         <StatCard label="Top category" value={stats.top} />

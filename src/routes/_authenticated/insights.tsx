@@ -23,7 +23,10 @@ export const Route = createFileRoute("/_authenticated/insights")({
           "AI analysis of your spending: overspending flags, recurring subscriptions, month-on-month trends and practical savings ideas.",
       },
       { property: "og:title", content: "Expense Intelligence — AI Wealth OS" },
-      { property: "og:description", content: "Understand where the money goes, with AI-detected patterns and trends." },
+      {
+        property: "og:description",
+        content: "Understand where the money goes, with AI-detected patterns and trends.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -37,11 +40,12 @@ function InsightsPage() {
   const budgets = useBudgets();
   const income = useIncomeSources();
   const currency = profile.data?.currency ?? "INR";
-  const rows = expenses.data ?? [];
+  const rows = useMemo(() => expenses.data ?? [], [expenses.data]);
 
   const monthly = useMemo(() => {
     const map = new Map<string, number>();
-    for (const e of rows) map.set(monthKey(e.spent_on), (map.get(monthKey(e.spent_on)) ?? 0) + Number(e.amount));
+    for (const e of rows)
+      map.set(monthKey(e.spent_on), (map.get(monthKey(e.spent_on)) ?? 0) + Number(e.amount));
     return [...map.entries()]
       .sort((a, b) => a[0].localeCompare(b[0]))
       .slice(-12)
@@ -51,7 +55,9 @@ function InsightsPage() {
   const byCategory = useMemo(() => {
     const map = new Map<string, number>();
     for (const e of rows) map.set(e.category, (map.get(e.category) ?? 0) + Number(e.amount));
-    return [...map.entries()].map(([category, total]) => ({ category, total })).sort((a, b) => b.total - a.total);
+    return [...map.entries()]
+      .map(([category, total]) => ({ category, total }))
+      .sort((a, b) => b.total - a.total);
   }, [rows]);
 
   const thisMonth = monthly[monthly.length - 1]?.total ?? 0;
@@ -69,7 +75,10 @@ function InsightsPage() {
             monthlyIncome,
             monthlyTotals: monthly,
             byCategory,
-            budgets: (budgets.data ?? []).map((b) => ({ category: b.category, limit: b.monthly_limit })),
+            budgets: (budgets.data ?? []).map((b) => ({
+              category: b.category,
+              limit: b.monthly_limit,
+            })),
             recentTransactions: rows.slice(0, 120).map((e) => ({
               date: e.spent_on,
               category: e.category,
@@ -104,10 +113,16 @@ function InsightsPage() {
             <StatCard label="This month" value={formatMoney(thisMonth, currency)} tone="brand" />
             <StatCard
               label="vs last month"
-              value={lastMonth > 0 ? `${(((thisMonth - lastMonth) / lastMonth) * 100).toFixed(1)}%` : "—"}
+              value={
+                lastMonth > 0 ? `${(((thisMonth - lastMonth) / lastMonth) * 100).toFixed(1)}%` : "—"
+              }
               tone={thisMonth <= lastMonth ? "success" : "danger"}
             />
-            <StatCard label="Top category" value={byCategory[0]?.category ?? "—"} hint={formatMoney(byCategory[0]?.total ?? 0, currency)} />
+            <StatCard
+              label="Top category"
+              value={byCategory[0]?.category ?? "—"}
+              hint={formatMoney(byCategory[0]?.total ?? 0, currency)}
+            />
             <StatCard
               label="Savings rate"
               value={monthlyIncome > 0 ? `${savingsRate.toFixed(0)}%` : "—"}
@@ -121,9 +136,21 @@ function InsightsPage() {
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={monthly}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-                    <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="var(--color-muted-foreground)" />
-                    <YAxis tick={{ fontSize: 11 }} stroke="var(--color-muted-foreground)" width={70} />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--color-border)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="month"
+                      tick={{ fontSize: 11 }}
+                      stroke="var(--color-muted-foreground)"
+                    />
+                    <YAxis
+                      tick={{ fontSize: 11 }}
+                      stroke="var(--color-muted-foreground)"
+                      width={70}
+                    />
                     <Tooltip
                       formatter={(v: number) => formatMoney(v, currency)}
                       contentStyle={{
@@ -144,10 +171,16 @@ function InsightsPage() {
                 {byCategory.map((c) => {
                   const max = byCategory[0]?.total ?? 1;
                   return (
-                    <div key={c.category} className="grid grid-cols-[minmax(0,120px)_1fr_90px] items-center gap-3">
+                    <div
+                      key={c.category}
+                      className="grid grid-cols-[minmax(0,120px)_1fr_90px] items-center gap-3"
+                    >
                       <span className="truncate text-xs">{c.category}</span>
                       <div className="h-2 overflow-hidden rounded-full bg-muted">
-                        <div className="h-full rounded-full bg-primary" style={{ width: `${(c.total / max) * 100}%` }} />
+                        <div
+                          className="h-full rounded-full bg-primary"
+                          style={{ width: `${(c.total / max) * 100}%` }}
+                        />
                       </div>
                       <span className="num text-right text-xs text-muted-foreground">
                         {formatMoney(c.total, currency)}
@@ -169,7 +202,8 @@ function InsightsPage() {
               </div>
               <div className="mt-4">
                 <AiNotice>
-                  AI-generated analysis of your own logged data. Guidance only — you know your context best.
+                  AI-generated analysis of your own logged data. Guidance only — you know your
+                  context best.
                 </AiNotice>
               </div>
             </SectionCard>

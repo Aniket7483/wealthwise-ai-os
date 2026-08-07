@@ -3,7 +3,13 @@ import { useMemo, useState } from "react";
 import { Flame } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { SectionCard } from "@/components/wealth/StatCard";
-import { AiNotice, DataSource, Pill, SkeletonGrid, Sparkline } from "@/components/market/MarketWidgets";
+import {
+  AiNotice,
+  DataSource,
+  Pill,
+  SkeletonGrid,
+  Sparkline,
+} from "@/components/market/MarketWidgets";
 import { Button } from "@/components/ui/button";
 import { useStockBoard } from "@/hooks/useMarketData";
 import { formatPct, formatPrice, formatVolume, toneFor, type ScoredStock } from "@/lib/market";
@@ -88,9 +94,15 @@ function bucketFor(key: BucketKey, stocks: ScoredStock[]): ScoredStock[] {
         .sort((a, b) => b.monthPct - a.monthPct)
         .slice(0, 10);
     case "nearHigh":
-      return list.filter((s) => s.fromHigh > -5).sort((a, b) => b.fromHigh - a.fromHigh).slice(0, 10);
+      return list
+        .filter((s) => s.fromHigh > -5)
+        .sort((a, b) => b.fromHigh - a.fromHigh)
+        .slice(0, 10);
     case "nearLow":
-      return list.filter((s) => s.fromLow < 8).sort((a, b) => a.fromLow - b.fromLow).slice(0, 10);
+      return list
+        .filter((s) => s.fromLow < 8)
+        .sort((a, b) => a.fromLow - b.fromLow)
+        .slice(0, 10);
     case "momentum":
       return list.sort((a, b) => b.momentum - a.momentum).slice(0, 10);
     case "undervalued":

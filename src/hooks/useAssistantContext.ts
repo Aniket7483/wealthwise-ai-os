@@ -34,13 +34,15 @@ export function useAssistantContext() {
           category: e.category,
           amount: e.amount,
         })),
-        markets: (overview.data?.groups ?? []).flatMap((g) =>
-          g.quotes.map((q) => ({
-            name: q.name,
-            dayPct: Number(q.changePct.toFixed(2)),
-            monthPct: Number(q.monthPct.toFixed(2)),
-          })),
-        ),
+        markets: overview.data
+          ? (overview.data.groups ?? []).flatMap((g) =>
+              g.quotes.map((q) => ({
+                name: q.name,
+                dayPct: Number(q.changePct.toFixed(2)),
+                monthPct: Number(q.monthPct.toFixed(2)),
+              })),
+            )
+          : "live market data still loading — do not comment on today's moves",
       }),
     [profile.data, income.data, holdings.data, goals.data, expenses.data, overview.data],
   );

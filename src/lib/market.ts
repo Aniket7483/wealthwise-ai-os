@@ -185,8 +185,7 @@ function clamp(n: number, min = 0, max = 100) {
 function stdDev(values: number[]) {
   if (values.length < 2) return 0;
   const mean = values.reduce((a, b) => a + b, 0) / values.length;
-  const variance =
-    values.reduce((a, b) => a + (b - mean) ** 2, 0) / (values.length - 1);
+  const variance = values.reduce((a, b) => a + (b - mean) ** 2, 0) / (values.length - 1);
   return Math.sqrt(variance);
 }
 
@@ -207,9 +206,7 @@ export function scoreStock(stock: UniverseStock, quote: Quote): ScoredStock {
   }
   const volatility = stdDev(returns);
 
-  const momentum = clamp(
-    50 + quote.monthPct * 1.6 + quote.weekPct * 1.2 + quote.changePct * 0.8,
-  );
+  const momentum = clamp(50 + quote.monthPct * 1.6 + quote.weekPct * 1.2 + quote.changePct * 0.8);
   const risk = clamp(volatility * 22 + Math.max(0, -quote.monthPct) * 1.2);
   const growth = clamp(50 + quote.monthPct * 2 + (positionInRange - 50) * 0.4);
   const value = clamp(100 - positionInRange * 0.8 - Math.max(0, quote.monthPct) * 1.2);

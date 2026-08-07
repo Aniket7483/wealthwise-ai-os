@@ -6,7 +6,14 @@ import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/layout/AppShell";
 import { SectionCard, StatCard } from "@/components/wealth/StatCard";
-import { AiNotice, DataSource, Pill, ScoreBar, SkeletonGrid, Sparkline } from "@/components/market/MarketWidgets";
+import {
+  AiNotice,
+  DataSource,
+  Pill,
+  ScoreBar,
+  SkeletonGrid,
+  Sparkline,
+} from "@/components/market/MarketWidgets";
 import { Button } from "@/components/ui/button";
 import { useFinancialNews, useStockBoard } from "@/hooks/useMarketData";
 import { analyseSectors, type SectorTake } from "@/lib/ai.functions";
@@ -23,7 +30,10 @@ export const Route = createFileRoute("/_authenticated/sectors")({
           "Live sector performance, heatmap, leaders and laggards across IT, Banking, Auto, Pharma, Energy, Defence and more, with AI commentary.",
       },
       { property: "og:title", content: "Sector Intelligence — AI Wealth OS" },
-      { property: "og:description", content: "Sector heatmap, rotation and AI analysis of Indian equities." },
+      {
+        property: "og:description",
+        content: "Sector heatmap, rotation and AI analysis of Indian equities.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -112,7 +122,12 @@ function SectorsPage() {
       ) : (
         <>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard label="Best sector today" value={sectors[0]?.sector ?? "—"} tone="success" hint={formatPct(sectors[0]?.dayPct ?? 0)} />
+            <StatCard
+              label="Best sector today"
+              value={sectors[0]?.sector ?? "—"}
+              tone="success"
+              hint={formatPct(sectors[0]?.dayPct ?? 0)}
+            />
             <StatCard
               label="Weakest sector today"
               value={sectors[sectors.length - 1]?.sector ?? "—"}
@@ -124,7 +139,11 @@ function SectorsPage() {
               value={[...sectors].sort((a, b) => b.monthPct - a.monthPct)[0]?.sector ?? "—"}
               tone="brand"
             />
-            <StatCard label="Sectors tracked" value={String(sectors.length)} hint="Live NSE constituents" />
+            <StatCard
+              label="Sectors tracked"
+              value={String(sectors.length)}
+              hint="Live NSE constituents"
+            />
           </div>
 
           <SectionCard
@@ -144,7 +163,9 @@ function SectorsPage() {
                   )}
                 >
                   <p className="text-sm font-medium">{s.sector}</p>
-                  <p className={cn("num text-lg font-semibold", toneFor(s.dayPct))}>{formatPct(s.dayPct)}</p>
+                  <p className={cn("num text-lg font-semibold", toneFor(s.dayPct))}>
+                    {formatPct(s.dayPct)}
+                  </p>
                   <p className="text-[11px] text-muted-foreground">
                     1W {formatPct(s.weekPct)} · 1M {formatPct(s.monthPct)}
                   </p>
@@ -154,16 +175,24 @@ function SectorsPage() {
           </SectionCard>
 
           <div className="grid gap-5 xl:grid-cols-[1.4fr_1fr]">
-            <SectionCard title={`${active} — companies`} description="Live constituents sorted by today's move.">
+            <SectionCard
+              title={`${active} — companies`}
+              description="Live constituents sorted by today's move."
+            >
               <div className="space-y-3">
                 {leaders.map((s: ScoredStock) => (
-                  <div key={s.symbol} className="grid items-center gap-3 rounded-lg border border-border/60 p-3 sm:grid-cols-[1.4fr_1fr_1fr]">
+                  <div
+                    key={s.symbol}
+                    className="grid items-center gap-3 rounded-lg border border-border/60 p-3 sm:grid-cols-[1.4fr_1fr_1fr]"
+                  >
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">{s.name}</p>
                       <p className="text-[11px] text-muted-foreground">{s.symbol}</p>
                     </div>
                     <div>
-                      <p className="num text-sm font-semibold">{formatPrice(s.price, s.currency)}</p>
+                      <p className="num text-sm font-semibold">
+                        {formatPrice(s.price, s.currency)}
+                      </p>
                       <p className={cn("num text-xs", toneFor(s.changePct))}>
                         {formatPct(s.changePct)} today · {formatPct(s.monthPct)} 1M
                       </p>
@@ -182,18 +211,26 @@ function SectorsPage() {
             </SectionCard>
 
             <div className="space-y-5">
-              <SectionCard title={`${active} — sector profile`} description="Blended scores across the sector.">
+              <SectionCard
+                title={`${active} — sector profile`}
+                description="Blended scores across the sector."
+              >
                 <div className="space-y-3">
                   <ScoreBar label="Momentum" value={activeSector?.momentum ?? 0} />
                   <ScoreBar label="Opportunity" value={activeSector?.opportunity ?? 0} />
                   <ScoreBar label="Risk" value={activeSector?.risk ?? 0} />
                 </div>
                 {takes.get(active.toLowerCase()) ? (
-                  <p className="mt-4 rounded-lg bg-primary/5 p-3 text-sm">{takes.get(active.toLowerCase())}</p>
+                  <p className="mt-4 rounded-lg bg-primary/5 p-3 text-sm">
+                    {takes.get(active.toLowerCase())}
+                  </p>
                 ) : null}
               </SectionCard>
 
-              <SectionCard title={`${active} — headlines`} description="Latest sector news from major financial publishers.">
+              <SectionCard
+                title={`${active} — headlines`}
+                description="Latest sector news from major financial publishers."
+              >
                 <div className="space-y-3">
                   {(news.data?.items ?? []).slice(0, 6).map((item) => (
                     <a
@@ -207,7 +244,9 @@ function SectorsPage() {
                       <p className="mt-1 text-[11px] text-muted-foreground">{item.source}</p>
                     </a>
                   ))}
-                  {news.isLoading ? <p className="text-sm text-muted-foreground">Loading headlines…</p> : null}
+                  {news.isLoading ? (
+                    <p className="text-sm text-muted-foreground">Loading headlines…</p>
+                  ) : null}
                 </div>
               </SectionCard>
             </div>

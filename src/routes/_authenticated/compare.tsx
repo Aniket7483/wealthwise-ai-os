@@ -4,7 +4,16 @@ import { GitCompare, X } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { AppShell } from "@/components/layout/AppShell";
 import { EmptyState, SectionCard } from "@/components/wealth/StatCard";
 import { AiNotice, DataSource, Pill, ScoreBar, Sparkline } from "@/components/market/MarketWidgets";
@@ -25,7 +34,10 @@ export const Route = createFileRoute("/_authenticated/compare")({
           "Compare up to four companies side by side on price action, momentum, risk, value and AI opportunity scores.",
       },
       { property: "og:title", content: "Company Comparison — AI Wealth OS" },
-      { property: "og:description", content: "Side-by-side company analysis with explainable AI scoring." },
+      {
+        property: "og:description",
+        content: "Side-by-side company analysis with explainable AI scoring.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -168,10 +180,16 @@ function ComparePage() {
       </SectionCard>
 
       {rows.length === 0 ? (
-        <EmptyState title="Nothing to compare yet" description="Select companies to load live comparison data." />
+        <EmptyState
+          title="Nothing to compare yet"
+          description="Select companies to load live comparison data."
+        />
       ) : (
         <>
-          <SectionCard title="Head to head" description="Live prices, returns and deterministic scores.">
+          <SectionCard
+            title="Head to head"
+            description="Live prices, returns and deterministic scores."
+          >
             <div className="overflow-x-auto">
               <table className="w-full min-w-[760px] text-sm">
                 <thead>
@@ -215,13 +233,28 @@ function ComparePage() {
           </SectionCard>
 
           <div className="grid gap-5 xl:grid-cols-[1.3fr_1fr]">
-            <SectionCard title="Score profile" description="Higher is better on every axis (risk is shown as stability).">
+            <SectionCard
+              title="Score profile"
+              description="Higher is better on every axis (risk is shown as stability)."
+            >
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-                    <XAxis dataKey="metric" tick={{ fontSize: 11 }} stroke="var(--color-muted-foreground)" />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} stroke="var(--color-muted-foreground)" />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--color-border)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="metric"
+                      tick={{ fontSize: 11 }}
+                      stroke="var(--color-muted-foreground)"
+                    />
+                    <YAxis
+                      domain={[0, 100]}
+                      tick={{ fontSize: 11 }}
+                      stroke="var(--color-muted-foreground)"
+                    />
                     <Tooltip
                       contentStyle={{
                         background: "var(--color-card)",
@@ -232,7 +265,12 @@ function ComparePage() {
                     />
                     <Legend wrapperStyle={{ fontSize: 11 }} />
                     {rows.map((r, i) => (
-                      <Bar key={r.symbol} dataKey={r.symbol} fill={colors[i % colors.length]} radius={[4, 4, 0, 0]} />
+                      <Bar
+                        key={r.symbol}
+                        dataKey={r.symbol}
+                        fill={colors[i % colors.length]}
+                        radius={[4, 4, 0, 0]}
+                      />
                     ))}
                   </BarChart>
                 </ResponsiveContainer>
@@ -245,7 +283,9 @@ function ComparePage() {
                   <div key={r.symbol}>
                     <div className="flex items-center justify-between text-sm">
                       <span className="font-medium">{r.name}</span>
-                      <span className={cn("num", toneFor(r.monthPct))}>{formatPct(r.monthPct)}</span>
+                      <span className={cn("num", toneFor(r.monthPct))}>
+                        {formatPct(r.monthPct)}
+                      </span>
                     </div>
                     <Sparkline values={r.spark} positive={r.monthPct >= 0} />
                     <div className="mt-1 grid grid-cols-2 gap-3">

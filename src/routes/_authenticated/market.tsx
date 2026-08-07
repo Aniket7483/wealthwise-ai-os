@@ -107,9 +107,7 @@ function MarketPage() {
           </Button>
         }
       >
-        {brief.error ? (
-          <p className="text-sm text-destructive">{brief.error.message}</p>
-        ) : null}
+        {brief.error ? <p className="text-sm text-destructive">{brief.error.message}</p> : null}
         {brief.data ? (
           <div className="space-y-5">
             <div>
@@ -177,7 +175,9 @@ function MarketPage() {
               </a>
             </li>
           ))}
-          {news.isLoading ? <li className="text-sm text-muted-foreground">Loading headlines…</li> : null}
+          {news.isLoading ? (
+            <li className="text-sm text-muted-foreground">Loading headlines…</li>
+          ) : null}
         </ul>
       </SectionCard>
     </AppShell>

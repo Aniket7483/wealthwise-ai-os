@@ -14,7 +14,10 @@ export const Route = createFileRoute("/_authenticated/assistant/")({
           "Chat with your personal CFO about markets, portfolio, spending and goals — with saved conversation history.",
       },
       { property: "og:title", content: "AI Assistant — AI Wealth OS" },
-      { property: "og:description", content: "An AI assistant that can see your live market and finance data." },
+      {
+        property: "og:description",
+        content: "An AI assistant that can see your live market and finance data.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -38,7 +41,9 @@ function AssistantIndex() {
     }
     createThread
       .mutateAsync(undefined)
-      .then((id) => navigate({ to: "/assistant/$threadId", params: { threadId: id }, replace: true }))
+      .then((id) =>
+        navigate({ to: "/assistant/$threadId", params: { threadId: id }, replace: true }),
+      )
       .catch((error: Error) => toast.error(error.message));
   }, [threads.isLoading, threads.data, createThread, navigate]);
 
