@@ -91,14 +91,17 @@ async function loadQuote(
 
     const closes = history.map((h) => h.close);
     const price = Number(meta['regularMarketPrice']) || closes.at(-1) || NaN;
+    // `chartPreviousClose` is the close *before the requested range* (e.g. 6
+    // months ago), so it must never be used for the daily move.
     const prevClose =
-      Number(meta['chartPreviousClose']) || closes.at(-2) || price;
+      Number(meta['regularMarketPreviousClose']) || closes.at(-2) || price;
     const weekAgo = closes.at(-6) ?? closes[0];
     const monthAgo = closes.at(-22) ?? closes[0];
     const avgVolume =
       volumes.length > 0
         ? volumes.slice(-63).reduce((a, b) => a + b, 0) / Math.min(volumes.length, 63)
         : 0;
+    const positiveCloses = closes.filter((c) => c > 0);
 
     return {
       symbol,
@@ -109,8 +112,8 @@ async function loadQuote(
       changePct: pctBetween(prevClose, price),
       weekPct: pctBetween(weekAgo, price),
       monthPct: pctBetween(monthAgo, price),
-      high52: Number(meta['fiftyTwoWeekHigh']) || Math.max(...closes, 0),
-      low52: Number(meta['fiftyTwoWeekLow']) || Math.min(...closes.filter(Boolean), 0),
+      high52: Number(meta['fiftyTwoWeekHigh']) || (positiveCloses.length ? Math.max(...positiveCloses) : NaN),
+      low52: Number(meta['fiftyTwoWeekLow']) || (positiveCloses.length ? Math.min(...positiveCloses) : NaN),
       volume: Number(meta['regularMarketVolume']) || volumes.at(-1) || 0,
       avgVolume,
       spark: closes.slice(-60),
