@@ -1,9 +1,13 @@
 // Server-only data fetchers: Yahoo Finance chart API (live prices) and
 // Google News RSS (financial headlines from named publishers).
 import type { NewsItem, Quote } from "./market";
+import { YAHOO_UA as UA, cached, mapLimit, yahooJson } from "./yahoo.server";
 
-const UA =
-  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122 Safari/537.36";
+const QUOTE_TTL = 60_000;
+const CANDLE_TTL = 60 * 60 * 1000;
+const FUNDAMENTALS_TTL = 60 * 60 * 1000;
+const SEARCH_TTL = 10 * 60 * 1000;
+const NEWS_TTL = 5 * 60 * 1000;
 
 type ChartResponse = {
   chart?: {
@@ -34,6 +38,16 @@ export async function fetchQuote(
   fallbackName: string,
   range = "6mo",
 ): Promise<Quote & { history: History }> {
+  return cached(`quote:${symbol}:${range}`, QUOTE_TTL, () =>
+    loadQuote(symbol, fallbackName, range),
+  );
+}
+
+async function loadQuote(
+  symbol: string,
+  fallbackName: string,
+  range: string,
+): Promise<Quote & { history: History }> {
   const empty: Quote & { history: History } = {
     symbol,
     name: fallbackName,
@@ -52,13 +66,11 @@ export async function fetchQuote(
   };
 
   try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(
-      symbol,
-    )}?range=${range}&interval=1d`;
-    const res = await fetch(url, { headers: { "User-Agent": UA, Accept: "application/json" } });
-    if (!res.ok) return { ...empty, error: `Data unavailable (${res.status})` };
-    const json = (await res.json()) as ChartResponse;
-    const result = json.chart?.result?.[0];
+    const json = await yahooJson<ChartResponse>(
+      `/v8/finance/chart/${encodeURIComponent(symbol)}`,
+      { range, interval: "1d" },
+    );
+    const result = json?.chart?.result?.[0];
     if (!result) return { ...empty, error: "No data returned" };
 
     const meta = result.meta ?? {};
