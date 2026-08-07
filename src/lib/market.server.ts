@@ -126,14 +126,11 @@ export async function fetchQuotes(
   items: { symbol: string; name: string }[],
   range = "6mo",
 ): Promise<Quote[]> {
-  const results = await Promise.all(
-    items.map(async (item) => {
-      const q = await fetchQuote(item.symbol, item.name, range);
-      const { history: _history, ...rest } = q;
-      return { ...rest, name: item.name || rest.name };
-    }),
-  );
-  return results;
+  return mapLimit(items, 6, async (item) => {
+    const q = await fetchQuote(item.symbol, item.name, range);
+    const { history: _history, ...rest } = q;
+    return { ...rest, name: item.name || rest.name };
+  });
 }
 
 function decodeEntities(input: string) {
@@ -156,7 +153,8 @@ function tag(block: string, name: string) {
 
 /** Google News RSS aggregates the publishers requested (Moneycontrol, ET, Mint, Reuters…). */
 export async function fetchNews(query: string, limit = 24): Promise<NewsItem[]> {
-  try {
+  return cached(`news:${query}:${limit}`, NEWS_TTL, async () => {
+    try {
     const url = `https://news.google.com/rss/search?q=${encodeURIComponent(
       query,
     )}&hl=en-IN&gl=IN&ceid=IN:en`;
@@ -178,25 +176,20 @@ export async function fetchNews(query: string, limit = 24): Promise<NewsItem[]> 
       };
     });
     return items.filter((i) => i.title);
-  } catch (error) {
-    console.error("[market] news failed", error);
-    return [];
-  }
+    } catch (error) {
+      console.error("[market] news failed", error);
+      return [];
+    }
+  });
 }
 
 export async function searchYahoo(query: string) {
-  try {
-    const res = await fetch(
-      `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(
-        query,
-      )}&quotesCount=8&newsCount=0`,
-      { headers: { "User-Agent": UA, Accept: "application/json" } },
+  return cached(`search:${query.toLowerCase()}`, SEARCH_TTL, async () => {
+    const json = await yahooJson<{ quotes?: Array<Record<string, string | undefined>> }>(
+      "/v1/finance/search",
+      { q: query, quotesCount: "8", newsCount: "0" },
     );
-    if (!res.ok) return [];
-    const json = (await res.json()) as {
-      quotes?: Array<Record<string, string | undefined>>;
-    };
-    return (json.quotes ?? [])
+    return (json?.quotes ?? [])
       .filter((q) => q['symbol'])
       .map((q) => ({
         symbol: String(q['symbol']),
@@ -205,22 +198,17 @@ export async function searchYahoo(query: string) {
         type: String(q['quoteType'] ?? ""),
         sector: String(q['sector'] ?? ""),
       }));
-  } catch (error) {
-    console.error("[market] search failed", error);
-    return [];
-  }
+  });
 }
 
 /** Daily candles (close/high/low/volume) for technical & historical analysis. */
 export async function fetchCandles(symbol: string, range = "5y"): Promise<CandleRow[]> {
-  try {
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(
-      symbol,
-    )}?range=${range}&interval=1d`;
-    const res = await fetch(url, { headers: { "User-Agent": UA, Accept: "application/json" } });
-    if (!res.ok) return [];
-    const json = (await res.json()) as ChartResponse;
-    const result = json.chart?.result?.[0];
+  return cached(`candles:${symbol}:${range}`, CANDLE_TTL, async () => {
+    const json = await yahooJson<ChartResponse>(
+      `/v8/finance/chart/${encodeURIComponent(symbol)}`,
+      { range, interval: "1d" },
+    );
+    const result = json?.chart?.result?.[0];
     if (!result) return [];
     const ts = result.timestamp ?? [];
     const q = (result.indicators?.quote?.[0] ?? {}) as {
@@ -242,10 +230,7 @@ export async function fetchCandles(symbol: string, range = "5y"): Promise<Candle
       });
     });
     return rows;
-  } catch (error) {
-    console.error("[market] candles failed", symbol, error);
-    return [];
-  }
+  });
 }
 
 export type Fundamentals = {
