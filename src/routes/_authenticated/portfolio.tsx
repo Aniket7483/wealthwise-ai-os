@@ -62,11 +62,12 @@ function PortfolioPage() {
   }, [holdings.error]);
 
   const quotes = useQuotesFor(rows.map((h) => ({ symbol: h.symbol, name: h.name })));
+  const quoteData = quotes.data;
   const quoteMap = useMemo(() => {
-    const map = new Map<string, NonNullable<typeof quotes.data>["quotes"][number]>();
-    for (const q of quotes.data?.quotes ?? []) map.set(q.symbol, q);
+    const map = new Map<string, NonNullable<typeof quoteData>["quotes"][number]>();
+    for (const q of quoteData?.quotes ?? []) map.set(q.symbol, q);
     return map;
-  }, [quotes.data]);
+  }, [quoteData]);
 
   const [form, setForm] = useState({
     symbol: "",
