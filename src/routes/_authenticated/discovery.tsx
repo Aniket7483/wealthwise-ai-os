@@ -32,7 +32,10 @@ export const Route = createFileRoute("/_authenticated/discovery")({
           "Rank liquid Indian stocks by an explainable AI Opportunity Score built from live price, trend, volatility and volume data.",
       },
       { property: "og:title", content: "AI Stock Discovery — AI Wealth OS" },
-      { property: "og:description", content: "Explainable opportunity scores, never profit promises." },
+      {
+        property: "og:description",
+        content: "Explainable opportunity scores, never profit promises.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -85,7 +88,10 @@ function DiscoveryPage() {
       description="Opportunity ranking and market scanner across a liquid NSE universe."
       actions={<DataSource label="Yahoo Finance (live prices)" />}
     >
-      <SectionCard title="Market scanner" description="Filter the universe, then read why each name ranks where it does.">
+      <SectionCard
+        title="Market scanner"
+        description="Filter the universe, then read why each name ranks where it does."
+      >
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <label className="space-y-1 text-sm">
             <span className="text-xs text-muted-foreground">Search</span>
@@ -109,7 +115,12 @@ function DiscoveryPage() {
             </select>
           </label>
           {[
-            { key: "minOpportunity", label: `Min opportunity score: ${filters.minOpportunity}`, min: 0, max: 100 },
+            {
+              key: "minOpportunity",
+              label: `Min opportunity score: ${filters.minOpportunity}`,
+              min: 0,
+              max: 100,
+            },
             { key: "maxRisk", label: `Max risk score: ${filters.maxRisk}`, min: 0, max: 100 },
             { key: "minMomentum", label: `Min momentum: ${filters.minMomentum}`, min: 0, max: 100 },
             { key: "minMonth", label: `Min 1M return: ${filters.minMonth}%`, min: -50, max: 50 },
@@ -187,7 +198,11 @@ function StockRow({
             <Pill tone="brand">{stock.sector}</Pill>
             <Pill
               tone={
-                stock.trend === "Uptrend" ? "positive" : stock.trend === "Downtrend" ? "negative" : "neutral"
+                stock.trend === "Uptrend"
+                  ? "positive"
+                  : stock.trend === "Downtrend"
+                    ? "negative"
+                    : "neutral"
               }
             >
               {stock.trend}
@@ -195,7 +210,9 @@ function StockRow({
           </div>
           <p className="num mt-1 text-lg font-semibold">
             {formatPrice(stock.price, stock.currency)}{" "}
-            <span className={`text-sm ${toneFor(stock.changePct)}`}>{formatPct(stock.changePct)}</span>
+            <span className={`text-sm ${toneFor(stock.changePct)}`}>
+              {formatPct(stock.changePct)}
+            </span>
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -213,8 +230,12 @@ function StockRow({
       </div>
 
       <div className="mt-3 grid gap-3 text-xs text-muted-foreground sm:grid-cols-3 lg:grid-cols-6">
-        <span>1W <span className={toneFor(stock.weekPct)}>{formatPct(stock.weekPct)}</span></span>
-        <span>1M <span className={toneFor(stock.monthPct)}>{formatPct(stock.monthPct)}</span></span>
+        <span>
+          1W <span className={toneFor(stock.weekPct)}>{formatPct(stock.weekPct)}</span>
+        </span>
+        <span>
+          1M <span className={toneFor(stock.monthPct)}>{formatPct(stock.monthPct)}</span>
+        </span>
         <span>52w high {formatPrice(stock.high52, stock.currency)}</span>
         <span>52w low {formatPrice(stock.low52, stock.currency)}</span>
         <span>Volume {formatVolume(stock.volume)}</span>

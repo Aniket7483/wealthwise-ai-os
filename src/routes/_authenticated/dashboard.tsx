@@ -133,7 +133,8 @@ function Dashboard() {
     const goalProgress = goalRows.length
       ? goalRows.reduce(
           (sum, g) =>
-            sum + (Number(g.target_amount) > 0 ? Number(g.current_amount) / Number(g.target_amount) : 0),
+            sum +
+            (Number(g.target_amount) > 0 ? Number(g.current_amount) / Number(g.target_amount) : 0),
           0,
         ) / goalRows.length
       : 0;
@@ -146,10 +147,7 @@ function Dashboard() {
       goalProgress,
     });
 
-    const budgetTotal = (budgets.data ?? []).reduce(
-      (sum, b) => sum + Number(b.monthly_limit),
-      0,
-    );
+    const budgetTotal = (budgets.data ?? []).reduce((sum, b) => sum + Number(b.monthly_limit), 0);
 
     return {
       monthlyIncome,
@@ -289,7 +287,11 @@ function Dashboard() {
                     <stop offset="100%" stopColor="var(--color-chart-5)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={12} />
                 <YAxis
                   tickFormatter={(v: number) => formatCompact(v, currency)}
@@ -358,7 +360,11 @@ function Dashboard() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={model.incomeBreakdown}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="var(--color-border)"
+                    vertical={false}
+                  />
                   <XAxis dataKey="name" tickLine={false} axisLine={false} fontSize={12} />
                   <YAxis
                     tickFormatter={(v: number) => formatCompact(v, currency)}
@@ -379,7 +385,11 @@ function Dashboard() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={model.cashflow}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={12} />
                 <YAxis
                   tickFormatter={(v: number) => formatCompact(v, currency)}
@@ -411,7 +421,11 @@ function Dashboard() {
                     <stop offset="100%" stopColor="var(--color-chart-2)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
                 <XAxis dataKey="month" tickLine={false} axisLine={false} fontSize={12} />
                 <YAxis
                   tickFormatter={(v: number) => formatCompact(v, currency)}
@@ -442,16 +456,12 @@ function Dashboard() {
           <div className="space-y-4">
             <ScoreRow
               label="Savings rate"
-              value={
-                model.monthlyIncome ? (model.monthlySavings / model.monthlyIncome) * 100 : 0
-              }
+              value={model.monthlyIncome ? (model.monthlySavings / model.monthlyIncome) * 100 : 0}
             />
             <ScoreRow
               label="Spending discipline"
               value={
-                model.monthlyIncome
-                  ? 100 - (model.monthlyExpenses / model.monthlyIncome) * 100
-                  : 0
+                model.monthlyIncome ? 100 - (model.monthlyExpenses / model.monthlyIncome) * 100 : 0
               }
             />
             <ScoreRow

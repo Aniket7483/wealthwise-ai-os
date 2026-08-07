@@ -76,9 +76,7 @@ export function atr(candles: Candle[], period = 14) {
   for (let i = 1; i < candles.length; i++) {
     const c = candles[i]!;
     const prev = candles[i - 1]!;
-    trs.push(
-      Math.max(c.high - c.low, Math.abs(c.high - prev.close), Math.abs(c.low - prev.close)),
-    );
+    trs.push(Math.max(c.high - c.low, Math.abs(c.high - prev.close), Math.abs(c.low - prev.close)));
   }
   return sma(trs, period);
 }
@@ -107,7 +105,12 @@ export function adx(candles: Candle[], period = 14) {
 export function bollinger(closes: number[], period = 20, mult = 2) {
   const mid = sma(closes, period);
   const sd = stdDev(closes.slice(-period));
-  return { upper: mid + mult * sd, middle: mid, lower: mid - mult * sd, width: (4 * sd) / (mid || 1) };
+  return {
+    upper: mid + mult * sd,
+    middle: mid,
+    lower: mid - mult * sd,
+    width: (4 * sd) / (mid || 1),
+  };
 }
 
 export function vwap(candles: Candle[], period = 20) {
@@ -200,7 +203,9 @@ export function computeTechnicals(candles: Candle[]) {
     ),
   );
   const volatilityScore = Math.round(clamp(vol * 1.6));
-  const riskScore = Math.round(clamp(volatilityScore * 0.6 + (aboveSma200 ? 0 : 25) + (rsiValue > 75 ? 15 : 0)));
+  const riskScore = Math.round(
+    clamp(volatilityScore * 0.6 + (aboveSma200 ? 0 : 25) + (rsiValue > 75 ? 15 : 0)),
+  );
   const breakout = Number.isFinite(high52) && price >= high52 * 0.98 && macdValue.histogram > 0;
 
   return {
@@ -278,7 +283,8 @@ export function rollingReturns(candles: Candle[], window: number) {
   for (let i = window; i < candles.length; i += 5) {
     const start = candles[i - window]!.close;
     const end = candles[i]!.close;
-    if (start > 0) out.push({ date: candles[i]!.date, ret: Number((((end - start) / start) * 100).toFixed(2)) });
+    if (start > 0)
+      out.push({ date: candles[i]!.date, ret: Number((((end - start) / start) * 100).toFixed(2)) });
   }
   return out;
 }
@@ -336,7 +342,7 @@ export function forecastHorizons(candles: Candle[], tech: Technicals): ForecastH
   if (!Number.isFinite(price) || rets.length < 30) return [];
   const mu = rets.reduce((a, b) => a + b, 0) / rets.length;
   const sigma = stdDev(rets) || 0.01;
-  const longRunDrift = 0.10 / 252; // ~10% nominal long-run equity drift
+  const longRunDrift = 0.1 / 252; // ~10% nominal long-run equity drift
 
   return HORIZONS.map((h) => {
     const blend = Math.min(1, h.days / 504);
@@ -351,11 +357,7 @@ export function forecastHorizons(candles: Candle[], tech: Technicals): ForecastH
     const bearish = normalCdf((-upThreshold - expected) / sd);
     const neutral = Math.max(0, 1 - bullish - bearish);
     const confidence = Math.round(
-      clamp(
-        70 - sd * 120 + (tech.trendStrength - 50) * 0.2 - (h.days > 252 ? 12 : 0),
-        25,
-        92,
-      ),
+      clamp(70 - sd * 120 + (tech.trendStrength - 50) * 0.2 - (h.days > 252 ? 12 : 0), 25, 92),
     );
     const years = h.days / 252;
     return {
@@ -369,7 +371,8 @@ export function forecastHorizons(candles: Candle[], tech: Technicals): ForecastH
       confidence,
       volatility: sigma * Math.sqrt(252) * 100,
       cagr: years >= 1 ? ((base / price) ** (1 / years) - 1) * 100 : NaN,
-      direction: bullish > bearish + 10 ? "Bullish" : bearish > bullish + 10 ? "Bearish" : "Neutral",
+      direction:
+        bullish > bearish + 10 ? "Bullish" : bearish > bullish + 10 ? "Bearish" : "Neutral",
     };
   });
 }

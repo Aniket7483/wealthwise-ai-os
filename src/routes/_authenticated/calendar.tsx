@@ -21,7 +21,10 @@ export const Route = createFileRoute("/_authenticated/calendar")({
           "Upcoming RBI and Fed meetings, GDP and inflation releases, employment data, earnings, dividends and IPOs for the next six weeks.",
       },
       { property: "og:title", content: "Economic Calendar — AI Wealth OS" },
-      { property: "og:description", content: "Six weeks of market-moving events for Indian and US markets." },
+      {
+        property: "og:description",
+        content: "Six weeks of market-moving events for Indian and US markets.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -71,7 +74,12 @@ function CalendarPage() {
       }
     >
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Events ahead" value={String(upcoming.length)} tone="brand" hint="Next ~6 weeks" />
+        <StatCard
+          label="Events ahead"
+          value={String(upcoming.length)}
+          tone="brand"
+          hint="Next ~6 weeks"
+        />
         <StatCard label="High impact" value={String(highImpact.length)} tone="warning" />
         <StatCard
           label="Next event"
@@ -92,13 +100,25 @@ function CalendarPage() {
                   <span
                     className={cn(
                       "absolute top-1.5 -left-[25px] size-2.5 rounded-full",
-                      e.impact === "high" ? "bg-rose-500" : e.impact === "medium" ? "bg-amber-500" : "bg-primary",
+                      e.impact === "high"
+                        ? "bg-rose-500"
+                        : e.impact === "medium"
+                          ? "bg-amber-500"
+                          : "bg-primary",
                     )}
                   />
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="num text-xs text-muted-foreground">{formatDate(e.date)}</span>
                     <Pill tone="brand">{e.group}</Pill>
-                    <Pill tone={e.impact === "high" ? "negative" : e.impact === "medium" ? "neutral" : "positive"}>
+                    <Pill
+                      tone={
+                        e.impact === "high"
+                          ? "negative"
+                          : e.impact === "medium"
+                            ? "neutral"
+                            : "positive"
+                      }
+                    >
                       {e.impact} impact
                     </Pill>
                   </div>
@@ -111,13 +131,19 @@ function CalendarPage() {
 
           <div className="grid gap-5 lg:grid-cols-2">
             {(calendar.data?.groups ?? []).map((g) => (
-              <SectionCard key={g.group} title={g.group} description={`${g.events.length} scheduled`}>
+              <SectionCard
+                key={g.group}
+                title={g.group}
+                description={`${g.events.length} scheduled`}
+              >
                 <div className="space-y-2">
                   {g.events.map((e, i) => (
                     <div key={i} className="rounded-lg border border-border/60 bg-card/40 p-3">
                       <div className="flex items-center justify-between gap-2">
                         <p className="text-sm font-medium">{e.title}</p>
-                        <span className="num text-[11px] text-muted-foreground">{formatDate(e.date)}</span>
+                        <span className="num text-[11px] text-muted-foreground">
+                          {formatDate(e.date)}
+                        </span>
                       </div>
                       <p className="mt-1 text-xs text-muted-foreground">{e.detail}</p>
                     </div>

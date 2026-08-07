@@ -55,9 +55,7 @@ function Landing() {
       </header>
 
       <section className="mx-auto max-w-6xl px-6 pb-16 pt-10 md:pt-20">
-        <p className="text-sm font-medium tracking-widest text-primary uppercase">
-          Personal CFO
-        </p>
+        <p className="text-sm font-medium tracking-widest text-primary uppercase">Personal CFO</p>
         <h1 className="font-display mt-4 max-w-3xl text-4xl leading-tight font-semibold tracking-tight text-balance md:text-6xl">
           Every rupee gets a job. Every month makes sense.
         </h1>

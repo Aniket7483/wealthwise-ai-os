@@ -12,7 +12,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useHoldingMutations, useHoldings, useQuotesFor } from "@/hooks/useMarketData";
-import { advisePortfolio, reviewPortfolio, type PortfolioAlerts, type PortfolioReview } from "@/lib/ai.functions";
+import {
+  advisePortfolio,
+  reviewPortfolio,
+  type PortfolioAlerts,
+  type PortfolioReview,
+} from "@/lib/ai.functions";
 import { STOCK_UNIVERSE, formatPct, formatPrice, toneFor } from "@/lib/market";
 
 export const Route = createFileRoute("/_authenticated/portfolio")({
@@ -63,7 +68,13 @@ function PortfolioPage() {
     return map;
   }, [quotes.data]);
 
-  const [form, setForm] = useState({ symbol: "", name: "", kind: "stock", quantity: "", avg_price: "" });
+  const [form, setForm] = useState({
+    symbol: "",
+    name: "",
+    kind: "stock",
+    quantity: "",
+    avg_price: "",
+  });
 
   const positions = useMemo(
     () =>
@@ -171,7 +182,11 @@ function PortfolioPage() {
       description="Live valuation, allocation and AI monitoring of everything you own."
       actions={
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => review.mutate()} disabled={!positions.length || review.isPending}>
+          <Button
+            variant="outline"
+            onClick={() => review.mutate()}
+            disabled={!positions.length || review.isPending}
+          >
             <Sparkle className="size-4" />
             {review.isPending ? "Reviewing…" : "AI review"}
           </Button>
@@ -234,9 +249,13 @@ function PortfolioPage() {
                         </p>
                       </td>
                       <td className="num py-2 text-right">{p.quantity}</td>
-                      <td className="num py-2 text-right">{formatPrice(p.avg_price, p.currency)}</td>
+                      <td className="num py-2 text-right">
+                        {formatPrice(p.avg_price, p.currency)}
+                      </td>
                       <td className="num py-2 text-right">{formatPrice(p.price, p.currency)}</td>
-                      <td className={`num py-2 text-right ${toneFor(p.changePct)}`}>{formatPct(p.changePct)}</td>
+                      <td className={`num py-2 text-right ${toneFor(p.changePct)}`}>
+                        {formatPct(p.changePct)}
+                      </td>
                       <td className="num py-2 text-right">{formatPrice(p.value, p.currency)}</td>
                       <td className={`num py-2 text-right ${toneFor(p.pnl)}`}>
                         {formatPrice(p.pnl, p.currency)}
@@ -259,7 +278,10 @@ function PortfolioPage() {
             </div>
           )}
 
-          <form onSubmit={submit} className="mt-5 grid gap-3 border-t border-border pt-4 sm:grid-cols-6">
+          <form
+            onSubmit={submit}
+            className="mt-5 grid gap-3 border-t border-border pt-4 sm:grid-cols-6"
+          >
             <div className="sm:col-span-2">
               <Label htmlFor="symbol">Symbol</Label>
               <Input
@@ -307,13 +329,22 @@ function PortfolioPage() {
 
         <SectionCard title="Allocation" description="Where your capital actually sits, by sector.">
           {bySector.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Add holdings to see your allocation mix.</p>
+            <p className="text-sm text-muted-foreground">
+              Add holdings to see your allocation mix.
+            </p>
           ) : (
             <>
               <div className="h-56">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={bySector} dataKey="value" nameKey="name" innerRadius={52} outerRadius={82} paddingAngle={2}>
+                    <Pie
+                      data={bySector}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={52}
+                      outerRadius={82}
+                      paddingAngle={2}
+                    >
                       {bySector.map((_, i) => (
                         <Cell key={i} fill={SLICE_COLORS[i % SLICE_COLORS.length]} />
                       ))}
@@ -358,7 +389,15 @@ function PortfolioPage() {
               <div key={i} className="rounded-lg border border-border/60 bg-card/40 p-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <Pill tone="brand">{a.symbol}</Pill>
-                  <Pill tone={a.severity === "high" ? "negative" : a.severity === "medium" ? "neutral" : "positive"}>
+                  <Pill
+                    tone={
+                      a.severity === "high"
+                        ? "negative"
+                        : a.severity === "medium"
+                          ? "neutral"
+                          : "positive"
+                    }
+                  >
                     {a.severity} · {a.type}
                   </Pill>
                 </div>

@@ -23,7 +23,10 @@ export const Route = createFileRoute("/_authenticated/global")({
           "Track NASDAQ, S&P 500, Dow, FTSE, Nikkei, Hang Seng, commodities, the dollar and crypto — and how each may transmit to Indian markets.",
       },
       { property: "og:title", content: "Global Markets — AI Wealth OS" },
-      { property: "og:description", content: "Global market dashboard with AI transmission analysis for India." },
+      {
+        property: "og:description",
+        content: "Global market dashboard with AI transmission analysis for India.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -89,7 +92,11 @@ function GlobalPage() {
             <StatCard
               label="NIFTY 50"
               value={formatPct(india.find((q) => q.symbol === "^NSEI")?.changePct ?? 0)}
-              tone={(india.find((q) => q.symbol === "^NSEI")?.changePct ?? 0) >= 0 ? "success" : "danger"}
+              tone={
+                (india.find((q) => q.symbol === "^NSEI")?.changePct ?? 0) >= 0
+                  ? "success"
+                  : "danger"
+              }
             />
             <StatCard
               label="Crude (WTI)"
@@ -118,22 +125,33 @@ function GlobalPage() {
             </SectionCard>
           ))}
 
-          <SectionCard title="Relative performance" description="One-month move across every tracked market.">
+          <SectionCard
+            title="Relative performance"
+            description="One-month move across every tracked market."
+          >
             <div className="space-y-2">
               {[...all]
                 .sort((a, b) => b.monthPct - a.monthPct)
                 .map((q) => {
                   const width = Math.min(100, Math.abs(q.monthPct) * 4);
                   return (
-                    <div key={q.symbol} className="grid grid-cols-[minmax(0,140px)_1fr_64px] items-center gap-3">
+                    <div
+                      key={q.symbol}
+                      className="grid grid-cols-[minmax(0,140px)_1fr_64px] items-center gap-3"
+                    >
                       <span className="truncate text-xs">{q.name}</span>
                       <div className="h-2 overflow-hidden rounded-full bg-muted">
                         <div
-                          className={cn("h-full rounded-full", q.monthPct >= 0 ? "bg-emerald-500" : "bg-rose-500")}
+                          className={cn(
+                            "h-full rounded-full",
+                            q.monthPct >= 0 ? "bg-emerald-500" : "bg-rose-500",
+                          )}
                           style={{ width: `${width}%` }}
                         />
                       </div>
-                      <span className={cn("num text-right text-xs", toneFor(q.monthPct))}>{formatPct(q.monthPct)}</span>
+                      <span className={cn("num text-right text-xs", toneFor(q.monthPct))}>
+                        {formatPct(q.monthPct)}
+                      </span>
                     </div>
                   );
                 })}

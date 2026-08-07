@@ -129,8 +129,18 @@ function WatchlistPage() {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Watchlists" value={String(lists.data?.length ?? 0)} tone="brand" />
         <StatCard label="Tracked symbols" value={String(items.data?.length ?? 0)} />
-        <StatCard label="Targets hit" value={String(hits)} tone="success" hint="Price at or above your target" />
-        <StatCard label="Stops breached" value={String(stops)} tone="danger" hint="Price at or below your stop" />
+        <StatCard
+          label="Targets hit"
+          value={String(hits)}
+          tone="success"
+          hint="Price at or above your target"
+        />
+        <StatCard
+          label="Stops breached"
+          value={String(stops)}
+          tone="danger"
+          hint="Price at or below your stop"
+        />
       </div>
 
       {(lists.data?.length ?? 0) === 0 ? (
@@ -169,7 +179,9 @@ function WatchlistPage() {
             actions={<DataSource label="Yahoo Finance" />}
           >
             {enriched.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Nothing in this list yet — add a symbol below.</p>
+              <p className="text-sm text-muted-foreground">
+                Nothing in this list yet — add a symbol below.
+              </p>
             ) : (
               <div className="space-y-3">
                 {enriched.map(({ item, scored }) => (
@@ -198,12 +210,16 @@ function WatchlistPage() {
                       </p>
                       <p>
                         Stop:{" "}
-                        <span className="num text-foreground">{item.stop_loss ? item.stop_loss : "—"}</span>
+                        <span className="num text-foreground">
+                          {item.stop_loss ? item.stop_loss : "—"}
+                        </span>
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-20">
-                        {scored ? <Sparkline values={scored.spark} positive={scored.monthPct >= 0} /> : null}
+                        {scored ? (
+                          <Sparkline values={scored.spark} positive={scored.monthPct >= 0} />
+                        ) : null}
                       </div>
                       <div className="flex-1 space-y-1">
                         <ScoreBar label="AI score" value={scored?.opportunity ?? 0} />
@@ -235,7 +251,10 @@ function WatchlistPage() {
               </div>
             )}
 
-            <form onSubmit={submitItem} className="mt-5 grid gap-3 border-t border-border pt-4 sm:grid-cols-5">
+            <form
+              onSubmit={submitItem}
+              className="mt-5 grid gap-3 border-t border-border pt-4 sm:grid-cols-5"
+            >
               <div className="sm:col-span-2">
                 <Label htmlFor="wsym">Symbol</Label>
                 <Input

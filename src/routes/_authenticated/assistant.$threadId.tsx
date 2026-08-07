@@ -23,7 +23,10 @@ export const Route = createFileRoute("/_authenticated/assistant/$threadId")({
           "Your saved conversation with the AI personal CFO — markets, portfolio, spending and goals, answered from live data.",
       },
       { property: "og:title", content: "AI Assistant — AI Wealth OS" },
-      { property: "og:description", content: "Saved AI conversations grounded in your live financial data." },
+      {
+        property: "og:description",
+        content: "Saved AI conversations grounded in your live financial data.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -76,7 +79,10 @@ function AssistantThread() {
           title: text.length > 48 ? `${text.slice(0, 48)}…` : text,
         });
       }
-      const conversation = [...rows.map((m) => ({ role: m.role, text: m.content })), { role: "user", text }]
+      const conversation = [
+        ...rows.map((m) => ({ role: m.role, text: m.content })),
+        { role: "user", text },
+      ]
         .slice(-8)
         .map((m) => `${m.role === "user" ? "User" : "Assistant"}: ${m.text}`)
         .join("\n");
@@ -108,7 +114,8 @@ function AssistantThread() {
     await deleteThread.mutateAsync(id);
     if (id !== threadId) return;
     const next = (threads.data ?? []).find((t) => t.id !== id);
-    if (next) await navigate({ to: "/assistant/$threadId", params: { threadId: next.id }, replace: true });
+    if (next)
+      await navigate({ to: "/assistant/$threadId", params: { threadId: next.id }, replace: true });
     else await navigate({ to: "/assistant", replace: true });
   }
 
@@ -136,7 +143,9 @@ function AssistantThread() {
             {rows.length === 0 && !busy ? (
               <div className="rounded-lg border border-dashed border-border p-6 text-center">
                 <MessagesSquare className="mx-auto size-6 text-primary" />
-                <p className="mt-2 text-sm font-medium">Ask anything about your money or the market</p>
+                <p className="mt-2 text-sm font-medium">
+                  Ask anything about your money or the market
+                </p>
                 <div className="mt-4 flex flex-wrap justify-center gap-2">
                   {SUGGESTIONS.map((s) => (
                     <button

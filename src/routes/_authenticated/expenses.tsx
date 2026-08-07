@@ -88,7 +88,11 @@ function Expenses() {
   return (
     <AppShell title="Expenses" description="Fast logging, honest categories, clear totals.">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Spent this month" value={formatMoney(stats.monthTotal, currency)} tone="brand" />
+        <StatCard
+          label="Spent this month"
+          value={formatMoney(stats.monthTotal, currency)}
+          tone="brand"
+        />
         <StatCard label="Transactions" value={String(stats.count)} />
         <StatCard label="Daily average" value={formatMoney(stats.dailyAvg, currency)} />
         <StatCard label="Top category" value={stats.top} />

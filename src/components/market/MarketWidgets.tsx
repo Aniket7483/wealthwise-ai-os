@@ -38,7 +38,9 @@ export function QuoteTile({ quote }: { quote: Quote }) {
     return (
       <div className="surface p-4">
         <p className="text-sm font-medium">{quote.name}</p>
-        <p className="mt-2 text-xs text-muted-foreground">{quote.error ?? "Live data unavailable"}</p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {quote.error ?? "Live data unavailable"}
+        </p>
       </div>
     );
   }
@@ -170,7 +172,10 @@ export function Meter({
         <p className="num text-sm font-semibold">{Math.round(safe)}</p>
       </div>
       <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
-        <div className={cn("h-full rounded-full transition-all", bar)} style={{ width: `${safe}%` }} />
+        <div
+          className={cn("h-full rounded-full transition-all", bar)}
+          style={{ width: `${safe}%` }}
+        />
       </div>
       {caption ? <p className="mt-1 text-[10px] text-muted-foreground">{caption}</p> : null}
     </div>

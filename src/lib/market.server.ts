@@ -66,10 +66,10 @@ async function loadQuote(
   };
 
   try {
-    const json = await yahooJson<ChartResponse>(
-      `/v8/finance/chart/${encodeURIComponent(symbol)}`,
-      { range, interval: "1d" },
-    );
+    const json = await yahooJson<ChartResponse>(`/v8/finance/chart/${encodeURIComponent(symbol)}`, {
+      range,
+      interval: "1d",
+    });
     const result = json?.chart?.result?.[0];
     if (!result) return { ...empty, error: "No data returned" };
 
@@ -90,11 +90,10 @@ async function loadQuote(
     });
 
     const closes = history.map((h) => h.close);
-    const price = Number(meta['regularMarketPrice']) || closes.at(-1) || NaN;
+    const price = Number(meta["regularMarketPrice"]) || closes.at(-1) || NaN;
     // `chartPreviousClose` is the close *before the requested range* (e.g. 6
     // months ago), so it must never be used for the daily move.
-    const prevClose =
-      Number(meta['regularMarketPreviousClose']) || closes.at(-2) || price;
+    const prevClose = Number(meta["regularMarketPreviousClose"]) || closes.at(-2) || price;
     const weekAgo = closes.at(-6) ?? closes[0];
     const monthAgo = closes.at(-22) ?? closes[0];
     const avgVolume =
@@ -105,16 +104,20 @@ async function loadQuote(
 
     return {
       symbol,
-      name: String(meta['shortName'] ?? fallbackName ?? symbol),
-      currency: String(meta['currency'] ?? "USD"),
+      name: String(meta["shortName"] ?? fallbackName ?? symbol),
+      currency: String(meta["currency"] ?? "USD"),
       price,
       prevClose,
       changePct: pctBetween(prevClose, price),
       weekPct: pctBetween(weekAgo, price),
       monthPct: pctBetween(monthAgo, price),
-      high52: Number(meta['fiftyTwoWeekHigh']) || (positiveCloses.length ? Math.max(...positiveCloses) : NaN),
-      low52: Number(meta['fiftyTwoWeekLow']) || (positiveCloses.length ? Math.min(...positiveCloses) : NaN),
-      volume: Number(meta['regularMarketVolume']) || volumes.at(-1) || 0,
+      high52:
+        Number(meta["fiftyTwoWeekHigh"]) ||
+        (positiveCloses.length ? Math.max(...positiveCloses) : NaN),
+      low52:
+        Number(meta["fiftyTwoWeekLow"]) ||
+        (positiveCloses.length ? Math.min(...positiveCloses) : NaN),
+      volume: Number(meta["regularMarketVolume"]) || volumes.at(-1) || 0,
       avgVolume,
       spark: closes.slice(-60),
       history,
@@ -158,27 +161,27 @@ function tag(block: string, name: string) {
 export async function fetchNews(query: string, limit = 24): Promise<NewsItem[]> {
   return cached(`news:${query}:${limit}`, NEWS_TTL, async () => {
     try {
-    const url = `https://news.google.com/rss/search?q=${encodeURIComponent(
-      query,
-    )}&hl=en-IN&gl=IN&ceid=IN:en`;
-    const res = await fetch(url, { headers: { "User-Agent": UA } });
-    if (!res.ok) return [];
-    const xml = await res.text();
-    const blocks = xml.split("<item>").slice(1);
-    const items: NewsItem[] = blocks.slice(0, limit).map((block, index) => {
-      const rawTitle = tag(block, "title");
-      const source = tag(block, "source") || rawTitle.split(" - ").at(-1) || "Google News";
-      const title = rawTitle.replace(new RegExp(`\\s-\\s${source}$`), "");
-      const pub = tag(block, "pubDate");
-      return {
-        id: `${index}-${title.slice(0, 40)}`,
-        title,
-        link: tag(block, "link"),
-        source,
-        publishedAt: pub ? new Date(pub).toISOString() : new Date().toISOString(),
-      };
-    });
-    return items.filter((i) => i.title);
+      const url = `https://news.google.com/rss/search?q=${encodeURIComponent(
+        query,
+      )}&hl=en-IN&gl=IN&ceid=IN:en`;
+      const res = await fetch(url, { headers: { "User-Agent": UA } });
+      if (!res.ok) return [];
+      const xml = await res.text();
+      const blocks = xml.split("<item>").slice(1);
+      const items: NewsItem[] = blocks.slice(0, limit).map((block, index) => {
+        const rawTitle = tag(block, "title");
+        const source = tag(block, "source") || rawTitle.split(" - ").at(-1) || "Google News";
+        const title = rawTitle.replace(new RegExp(`\\s-\\s${source}$`), "");
+        const pub = tag(block, "pubDate");
+        return {
+          id: `${index}-${title.slice(0, 40)}`,
+          title,
+          link: tag(block, "link"),
+          source,
+          publishedAt: pub ? new Date(pub).toISOString() : new Date().toISOString(),
+        };
+      });
+      return items.filter((i) => i.title);
     } catch (error) {
       console.error("[market] news failed", error);
       return [];
@@ -193,13 +196,13 @@ export async function searchYahoo(query: string) {
       { q: query, quotesCount: "8", newsCount: "0" },
     );
     return (json?.quotes ?? [])
-      .filter((q) => q['symbol'])
+      .filter((q) => q["symbol"])
       .map((q) => ({
-        symbol: String(q['symbol']),
-        name: String(q['longname'] ?? q['shortname'] ?? q['symbol']),
-        exchange: String(q['exchDisp'] ?? ""),
-        type: String(q['quoteType'] ?? ""),
-        sector: String(q['sector'] ?? ""),
+        symbol: String(q["symbol"]),
+        name: String(q["longname"] ?? q["shortname"] ?? q["symbol"]),
+        exchange: String(q["exchDisp"] ?? ""),
+        type: String(q["quoteType"] ?? ""),
+        sector: String(q["sector"] ?? ""),
       }));
   });
 }
@@ -207,10 +210,10 @@ export async function searchYahoo(query: string) {
 /** Daily candles (close/high/low/volume) for technical & historical analysis. */
 export async function fetchCandles(symbol: string, range = "5y"): Promise<CandleRow[]> {
   return cached(`candles:${symbol}:${range}`, CANDLE_TTL, async () => {
-    const json = await yahooJson<ChartResponse>(
-      `/v8/finance/chart/${encodeURIComponent(symbol)}`,
-      { range, interval: "1d" },
-    );
+    const json = await yahooJson<ChartResponse>(`/v8/finance/chart/${encodeURIComponent(symbol)}`, {
+      range,
+      interval: "1d",
+    });
     const result = json?.chart?.result?.[0];
     if (!result) return [];
     const ts = result.timestamp ?? [];
@@ -334,51 +337,51 @@ export async function fetchFundamentals(symbol: string): Promise<Fundamentals> {
       }>(`/v10/finance/quoteSummary/${encodeURIComponent(symbol)}`, { modules });
       const r = json?.quoteSummary?.result?.[0];
       if (!r) return emptyFundamentals;
-      const profile = r['summaryProfile'] ?? {};
-      const detail = r['summaryDetail'] ?? {};
-      const stats = r['defaultKeyStatistics'] ?? {};
-      const fin = r['financialData'] ?? {};
-      const holders = r['majorHoldersBreakdown'] ?? {};
-      const revenue = num(fin['totalRevenue'] as RawValue);
-      const ebitda = num(fin['ebitda'] as RawValue);
+      const profile = r["summaryProfile"] ?? {};
+      const detail = r["summaryDetail"] ?? {};
+      const stats = r["defaultKeyStatistics"] ?? {};
+      const fin = r["financialData"] ?? {};
+      const holders = r["majorHoldersBreakdown"] ?? {};
+      const revenue = num(fin["totalRevenue"] as RawValue);
+      const ebitda = num(fin["ebitda"] as RawValue);
       return {
         ...emptyFundamentals,
         available: true,
-        sector: String(profile['sector'] ?? ""),
-        industry: String(profile['industry'] ?? ""),
-        summary: String(profile['longBusinessSummary'] ?? ""),
-        marketCap: num(detail['marketCap'] as RawValue),
-        enterpriseValue: num(stats['enterpriseValue'] as RawValue),
-        trailingPE: num(detail['trailingPE'] as RawValue),
-        forwardPE: num(detail['forwardPE'] as RawValue),
-        pegRatio: num(stats['pegRatio'] as RawValue),
-        eps: num(stats['trailingEps'] as RawValue),
-        bookValue: num(stats['bookValue'] as RawValue),
-        priceToBook: num(stats['priceToBook'] as RawValue),
-        roe: num(fin['returnOnEquity'] as RawValue),
-        roa: num(fin['returnOnAssets'] as RawValue),
-        debtToEquity: num(fin['debtToEquity'] as RawValue),
-        currentRatio: num(fin['currentRatio'] as RawValue),
-        quickRatio: num(fin['quickRatio'] as RawValue),
-        dividendYield: num(detail['dividendYield'] as RawValue),
-        revenueGrowth: num(fin['revenueGrowth'] as RawValue),
-        earningsGrowth: num(fin['earningsGrowth'] as RawValue),
-        freeCashflow: num(fin['freeCashflow'] as RawValue),
-        operatingCashflow: num(fin['operatingCashflow'] as RawValue),
-        operatingMargin: num(fin['operatingMargins'] as RawValue),
-        profitMargin: num(fin['profitMargins'] as RawValue),
-        ebitdaMargin: num(fin['ebitdaMargins'] as RawValue) ??
-          (revenue && ebitda ? ebitda / revenue : null),
-        totalCash: num(fin['totalCash'] as RawValue),
-        totalDebt: num(fin['totalDebt'] as RawValue),
+        sector: String(profile["sector"] ?? ""),
+        industry: String(profile["industry"] ?? ""),
+        summary: String(profile["longBusinessSummary"] ?? ""),
+        marketCap: num(detail["marketCap"] as RawValue),
+        enterpriseValue: num(stats["enterpriseValue"] as RawValue),
+        trailingPE: num(detail["trailingPE"] as RawValue),
+        forwardPE: num(detail["forwardPE"] as RawValue),
+        pegRatio: num(stats["pegRatio"] as RawValue),
+        eps: num(stats["trailingEps"] as RawValue),
+        bookValue: num(stats["bookValue"] as RawValue),
+        priceToBook: num(stats["priceToBook"] as RawValue),
+        roe: num(fin["returnOnEquity"] as RawValue),
+        roa: num(fin["returnOnAssets"] as RawValue),
+        debtToEquity: num(fin["debtToEquity"] as RawValue),
+        currentRatio: num(fin["currentRatio"] as RawValue),
+        quickRatio: num(fin["quickRatio"] as RawValue),
+        dividendYield: num(detail["dividendYield"] as RawValue),
+        revenueGrowth: num(fin["revenueGrowth"] as RawValue),
+        earningsGrowth: num(fin["earningsGrowth"] as RawValue),
+        freeCashflow: num(fin["freeCashflow"] as RawValue),
+        operatingCashflow: num(fin["operatingCashflow"] as RawValue),
+        operatingMargin: num(fin["operatingMargins"] as RawValue),
+        profitMargin: num(fin["profitMargins"] as RawValue),
+        ebitdaMargin:
+          num(fin["ebitdaMargins"] as RawValue) ?? (revenue && ebitda ? ebitda / revenue : null),
+        totalCash: num(fin["totalCash"] as RawValue),
+        totalDebt: num(fin["totalDebt"] as RawValue),
         totalRevenue: revenue,
         ebitda,
-        heldPercentInsiders: num(holders['insidersPercentHeld'] as RawValue),
-        heldPercentInstitutions: num(holders['institutionsPercentHeld'] as RawValue),
-        beta: num(detail['beta'] as RawValue),
-        recommendationKey: String(fin['recommendationKey'] ?? ""),
-        numberOfAnalysts: num(fin['numberOfAnalystOpinions'] as RawValue),
-        targetMeanPrice: num(fin['targetMeanPrice'] as RawValue),
+        heldPercentInsiders: num(holders["insidersPercentHeld"] as RawValue),
+        heldPercentInstitutions: num(holders["institutionsPercentHeld"] as RawValue),
+        beta: num(detail["beta"] as RawValue),
+        recommendationKey: String(fin["recommendationKey"] ?? ""),
+        numberOfAnalysts: num(fin["numberOfAnalystOpinions"] as RawValue),
+        targetMeanPrice: num(fin["targetMeanPrice"] as RawValue),
       };
     } catch (error) {
       console.error("[market] fundamentals failed", symbol, error);

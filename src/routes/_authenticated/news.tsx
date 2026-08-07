@@ -96,7 +96,9 @@ function NewsPage() {
           <p className="mb-3 text-sm text-destructive">{analysis.error.message}</p>
         ) : null}
         <div className="space-y-3">
-          {news.isLoading ? <p className="text-sm text-muted-foreground">Loading headlines…</p> : null}
+          {news.isLoading ? (
+            <p className="text-sm text-muted-foreground">Loading headlines…</p>
+          ) : null}
           {(news.data?.items ?? []).map((item) => {
             const insight = insightFor(item.id);
             return (

@@ -7,7 +7,7 @@ export async function aiJson<T>(opts: {
   schemaName: string;
   schema: JsonSchema;
 }): Promise<T> {
-  const key = process.env['LOVABLE_API_KEY'];
+  const key = process.env["LOVABLE_API_KEY"];
   if (!key) throw new Error("AI is not configured yet.");
 
   const res = await fetch("https://ai.gateway.lovable.dev/v1/responses", {

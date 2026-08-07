@@ -171,9 +171,7 @@ export function AppShell({
             </Button>
             <div>
               <h1 className="text-lg font-semibold">{title}</h1>
-              {description ? (
-                <p className="text-sm text-muted-foreground">{description}</p>
-              ) : null}
+              {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
             </div>
           </div>
           {actions ? <div className="flex items-center gap-2">{actions}</div> : null}

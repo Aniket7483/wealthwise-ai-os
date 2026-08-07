@@ -163,7 +163,9 @@ export const researchStock = createServerFn({ method: "POST" })
 export type SectorTake = { sectors: { sector: string; view: string }[] };
 
 export const analyseSectors = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 6000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 6000),
+  }))
   .handler(async ({ data }): Promise<SectorTake> => {
     const { aiJson, strictObject } = await import("./ai-gateway.server");
     return aiJson<SectorTake>({
@@ -186,7 +188,9 @@ export type GlobalImpact = {
 };
 
 export const analyseGlobalImpact = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 6000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 6000),
+  }))
   .handler(async ({ data }): Promise<GlobalImpact> => {
     const { aiJson, strictObject } = await import("./ai-gateway.server");
     return aiJson<GlobalImpact>({
@@ -257,7 +261,9 @@ export const generateEconomicCalendar = createServerFn({ method: "POST" })
   });
 
 export const advisePortfolio = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 8000),
+  }))
   .handler(async ({ data }): Promise<PortfolioAlerts> => {
     const { aiJson, strictObject } = await import("./ai-gateway.server");
     return aiJson<PortfolioAlerts>({
@@ -300,7 +306,9 @@ export type LongTermReport = {
 };
 
 export const longTermReport = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 8000),
+  }))
   .handler(async ({ data }): Promise<LongTermReport> => {
     const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
     return aiJson<LongTermReport>({
@@ -331,7 +339,9 @@ export const longTermReport = createServerFn({ method: "POST" })
 export type ChartRead = { plainEnglish: string; observations: string[]; caution: string };
 
 export const interpretChart = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 4000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 4000),
+  }))
   .handler(async ({ data }): Promise<ChartRead> => {
     const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
     return aiJson<ChartRead>({
@@ -364,7 +374,9 @@ export type ValuationView = {
 };
 
 export const valuationLab = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 6000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 6000),
+  }))
   .handler(async ({ data }): Promise<ValuationView> => {
     const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
     return aiJson<ValuationView>({
@@ -401,7 +413,9 @@ export type ForecastNarrative = {
 };
 
 export const explainForecast = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 6000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 6000),
+  }))
   .handler(async ({ data }): Promise<ForecastNarrative> => {
     const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
     return aiJson<ForecastNarrative>({
@@ -435,7 +449,9 @@ export type ComparisonView = {
 };
 
 export const compareCompanies = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 8000),
+  }))
   .handler(async ({ data }): Promise<ComparisonView> => {
     const { aiJson, strictObject } = await import("./ai-gateway.server");
     return aiJson<ComparisonView>({
@@ -473,7 +489,9 @@ export type PortfolioReview = {
 };
 
 export const reviewPortfolio = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 8000),
+  }))
   .handler(async ({ data }): Promise<PortfolioReview> => {
     const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
     return aiJson<PortfolioReview>({
@@ -501,7 +519,9 @@ export type ExpenseIntel = {
 };
 
 export const analyseExpenses = createServerFn({ method: "POST" })
-  .inputValidator((input: { context: string }) => ({ context: String(input.context).slice(0, 8000) }))
+  .inputValidator((input: { context: string }) => ({
+    context: String(input.context).slice(0, 8000),
+  }))
   .handler(async ({ data }): Promise<ExpenseIntel> => {
     const { aiJson, strictObject, strArray } = await import("./ai-gateway.server");
     return aiJson<ExpenseIntel>({

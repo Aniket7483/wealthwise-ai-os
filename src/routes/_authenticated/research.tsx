@@ -29,12 +29,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useStockDossier, useSymbolSearch } from "@/hooks/useMarketData";
-import {
-  explainForecast,
-  interpretChart,
-  longTermReport,
-  valuationLab,
-} from "@/lib/ai.functions";
+import { explainForecast, interpretChart, longTermReport, valuationLab } from "@/lib/ai.functions";
 import { formatPct, formatPrice, toneFor } from "@/lib/market";
 import {
   cagr,
@@ -85,10 +80,7 @@ function ResearchPage() {
   );
   const [horizonKey, setHorizonKey] = useState("30d");
   const horizon = forecasts.find((f) => f.key === horizonKey) ?? forecasts[0];
-  const band = useMemo(
-    () => (horizon ? forecastBand(candles, horizon) : null),
-    [candles, horizon],
-  );
+  const band = useMemo(() => (horizon ? forecastBand(candles, horizon) : null), [candles, horizon]);
   const dd = useMemo(() => (candles.length > 30 ? drawdownProfile(candles) : null), [candles]);
 
   const context = useMemo(() => {
@@ -199,7 +191,11 @@ function ResearchPage() {
                   ? `${fundamentals.sector || "—"} · ${fundamentals.industry || "—"}`
                   : "Sector data unavailable live"
               }
-              actions={<Pill tone={quote.changePct >= 0 ? "positive" : "negative"}>{formatPct(quote.changePct)}</Pill>}
+              actions={
+                <Pill tone={quote.changePct >= 0 ? "positive" : "negative"}>
+                  {formatPct(quote.changePct)}
+                </Pill>
+              }
             >
               <div className="flex flex-wrap items-end gap-6">
                 <div>
@@ -209,8 +205,14 @@ function ResearchPage() {
                   </p>
                 </div>
                 <div className="grid flex-1 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-                  <Metric label="Market cap" value={formatCompact(fundamentals?.marketCap ?? null, currency)} />
-                  <Metric label="Enterprise value" value={formatCompact(fundamentals?.enterpriseValue ?? null, currency)} />
+                  <Metric
+                    label="Market cap"
+                    value={formatCompact(fundamentals?.marketCap ?? null, currency)}
+                  />
+                  <Metric
+                    label="Enterprise value"
+                    value={formatCompact(fundamentals?.enterpriseValue ?? null, currency)}
+                  />
                   <Metric label="52W high" value={formatPrice(tech.high52, currency)} />
                   <Metric label="52W low" value={formatPrice(tech.low52, currency)} />
                 </div>
@@ -237,23 +239,63 @@ function ResearchPage() {
                 <Metric label="Debt / Equity" value={formatRatio(fundamentals?.debtToEquity)} />
                 <Metric label="Current ratio" value={formatRatio(fundamentals?.currentRatio)} />
                 <Metric label="Quick ratio" value={formatRatio(fundamentals?.quickRatio)} />
-                <Metric label="Dividend yield" value={formatPercentValue(fundamentals?.dividendYield)} />
-                <Metric label="Revenue growth" value={formatPercentValue(fundamentals?.revenueGrowth)} />
-                <Metric label="Earnings growth" value={formatPercentValue(fundamentals?.earningsGrowth)} />
-                <Metric label="Operating margin" value={formatPercentValue(fundamentals?.operatingMargin)} />
+                <Metric
+                  label="Dividend yield"
+                  value={formatPercentValue(fundamentals?.dividendYield)}
+                />
+                <Metric
+                  label="Revenue growth"
+                  value={formatPercentValue(fundamentals?.revenueGrowth)}
+                />
+                <Metric
+                  label="Earnings growth"
+                  value={formatPercentValue(fundamentals?.earningsGrowth)}
+                />
+                <Metric
+                  label="Operating margin"
+                  value={formatPercentValue(fundamentals?.operatingMargin)}
+                />
                 <Metric label="Net margin" value={formatPercentValue(fundamentals?.profitMargin)} />
-                <Metric label="EBITDA margin" value={formatPercentValue(fundamentals?.ebitdaMargin)} />
-                <Metric label="Free cash flow" value={formatCompact(fundamentals?.freeCashflow ?? null, currency)} />
-                <Metric label="Cash position" value={formatCompact(fundamentals?.totalCash ?? null, currency)} />
-                <Metric label="Total debt" value={formatCompact(fundamentals?.totalDebt ?? null, currency)} />
-                <Metric label="Revenue" value={formatCompact(fundamentals?.totalRevenue ?? null, currency)} />
-                <Metric label="EBITDA" value={formatCompact(fundamentals?.ebitda ?? null, currency)} />
-                <Metric label="Promoter / insider holding" value={formatPercentValue(fundamentals?.heldPercentInsiders)} />
-                <Metric label="Institutional holding" value={formatPercentValue(fundamentals?.heldPercentInstitutions)} />
+                <Metric
+                  label="EBITDA margin"
+                  value={formatPercentValue(fundamentals?.ebitdaMargin)}
+                />
+                <Metric
+                  label="Free cash flow"
+                  value={formatCompact(fundamentals?.freeCashflow ?? null, currency)}
+                />
+                <Metric
+                  label="Cash position"
+                  value={formatCompact(fundamentals?.totalCash ?? null, currency)}
+                />
+                <Metric
+                  label="Total debt"
+                  value={formatCompact(fundamentals?.totalDebt ?? null, currency)}
+                />
+                <Metric
+                  label="Revenue"
+                  value={formatCompact(fundamentals?.totalRevenue ?? null, currency)}
+                />
+                <Metric
+                  label="EBITDA"
+                  value={formatCompact(fundamentals?.ebitda ?? null, currency)}
+                />
+                <Metric
+                  label="Promoter / insider holding"
+                  value={formatPercentValue(fundamentals?.heldPercentInsiders)}
+                />
+                <Metric
+                  label="Institutional holding"
+                  value={formatPercentValue(fundamentals?.heldPercentInstitutions)}
+                />
                 <Metric label="Beta" value={formatRatio(fundamentals?.beta)} />
                 <Metric
                   label="Analyst consensus"
-                  value={fundamentals?.recommendationKey ? fundamentals.recommendationKey.replace("_", " ") : "—"}
+                  value={
+                    fundamentals?.recommendationKey
+                      ? fundamentals.recommendationKey.replace("_", " ")
+                      : "—"
+                  }
                   hint={
                     fundamentals?.numberOfAnalysts
                       ? `${fundamentals.numberOfAnalysts} analysts · target ${formatPrice(
@@ -267,23 +309,46 @@ function ResearchPage() {
             </SectionCard>
 
             <div className="grid gap-4 xl:grid-cols-2">
-              <SectionCard title="Technical terminal" description="Computed from 5 years of daily candles.">
+              <SectionCard
+                title="Technical terminal"
+                description="Computed from 5 years of daily candles."
+              >
                 <div className="grid gap-2 sm:grid-cols-3">
                   <Metric label="RSI (14)" value={formatRatio(tech.rsi, 1)} />
-                  <Metric label="MACD" value={formatRatio(tech.macd.macd)} hint={`Signal ${formatRatio(tech.macd.signal)}`} />
+                  <Metric
+                    label="MACD"
+                    value={formatRatio(tech.macd.macd)}
+                    hint={`Signal ${formatRatio(tech.macd.signal)}`}
+                  />
                   <Metric label="ADX" value={formatRatio(tech.adx, 1)} />
-                  <Metric label="SMA 20 / 50" value={`${formatRatio(tech.sma20, 0)} / ${formatRatio(tech.sma50, 0)}`} />
+                  <Metric
+                    label="SMA 20 / 50"
+                    value={`${formatRatio(tech.sma20, 0)} / ${formatRatio(tech.sma50, 0)}`}
+                  />
                   <Metric label="SMA 200" value={formatRatio(tech.sma200, 0)} />
-                  <Metric label="EMA 12 / 26" value={`${formatRatio(tech.ema12, 0)} / ${formatRatio(tech.ema26, 0)}`} />
+                  <Metric
+                    label="EMA 12 / 26"
+                    value={`${formatRatio(tech.ema12, 0)} / ${formatRatio(tech.ema26, 0)}`}
+                  />
                   <Metric label="VWAP (20d)" value={formatRatio(tech.vwap, 0)} />
                   <Metric label="ATR (14)" value={formatRatio(tech.atr)} />
-                  <Metric label="SuperTrend" value={tech.superTrend.direction} hint={formatRatio(tech.superTrend.value, 0)} />
+                  <Metric
+                    label="SuperTrend"
+                    value={tech.superTrend.direction}
+                    hint={formatRatio(tech.superTrend.value, 0)}
+                  />
                   <Metric
                     label="Bollinger"
                     value={`${formatRatio(tech.bollinger.lower, 0)} – ${formatRatio(tech.bollinger.upper, 0)}`}
                   />
-                  <Metric label="Support" value={tech.support.map((s) => s.toFixed(0)).join(" · ") || "—"} />
-                  <Metric label="Resistance" value={tech.resistance.map((s) => s.toFixed(0)).join(" · ") || "—"} />
+                  <Metric
+                    label="Support"
+                    value={tech.support.map((s) => s.toFixed(0)).join(" · ") || "—"}
+                  />
+                  <Metric
+                    label="Resistance"
+                    value={tech.resistance.map((s) => s.toFixed(0)).join(" · ") || "—"}
+                  />
                 </div>
                 <div className="mt-3 grid gap-2 sm:grid-cols-4">
                   <Meter label="Trend" value={tech.trendStrength} />
@@ -312,11 +377,16 @@ function ResearchPage() {
                   </div>
                 ) : null}
                 {chartRead.error ? (
-                  <p className="mt-2 text-xs text-destructive">{(chartRead.error as Error).message}</p>
+                  <p className="mt-2 text-xs text-destructive">
+                    {(chartRead.error as Error).message}
+                  </p>
                 ) : null}
               </SectionCard>
 
-              <SectionCard title="Price & drawdown history" description="Last 12 months of closes, plus the full drawdown profile.">
+              <SectionCard
+                title="Price & drawdown history"
+                description="Last 12 months of closes, plus the full drawdown profile."
+              >
                 <div className="h-56">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={priceSeries}>
@@ -324,7 +394,13 @@ function ResearchPage() {
                       <XAxis dataKey="date" hide />
                       <YAxis domain={["auto", "auto"]} width={52} tick={{ fontSize: 11 }} />
                       <Tooltip />
-                      <Area type="monotone" dataKey="close" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.12} />
+                      <Area
+                        type="monotone"
+                        dataKey="close"
+                        stroke="var(--color-primary)"
+                        fill="var(--color-primary)"
+                        fillOpacity={0.12}
+                      />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -332,7 +408,10 @@ function ResearchPage() {
                   <Metric label="1Y CAGR" value={`${formatRatio(cagr(candles, 1), 1)}%`} />
                   <Metric label="3Y CAGR" value={`${formatRatio(cagr(candles, 3), 1)}%`} />
                   <Metric label="5Y CAGR" value={`${formatRatio(cagr(candles, 5), 1)}%`} />
-                  <Metric label="Annual volatility" value={`${formatRatio(tech.annualVolatility, 1)}%`} />
+                  <Metric
+                    label="Annual volatility"
+                    value={`${formatRatio(tech.annualVolatility, 1)}%`}
+                  />
                 </div>
                 {dd ? (
                   <div className="mt-3 h-32">
@@ -341,14 +420,21 @@ function ResearchPage() {
                         <XAxis dataKey="date" hide />
                         <YAxis width={44} tick={{ fontSize: 11 }} />
                         <Tooltip />
-                        <Area type="monotone" dataKey="drawdown" stroke="#ef4444" fill="#ef4444" fillOpacity={0.15} />
+                        <Area
+                          type="monotone"
+                          dataKey="drawdown"
+                          stroke="#ef4444"
+                          fill="#ef4444"
+                          fillOpacity={0.15}
+                        />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 ) : null}
                 {dd ? (
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Max drawdown {dd.maxDrawdown.toFixed(1)}% · currently {dd.currentDrawdown.toFixed(1)}% below peak.
+                    Max drawdown {dd.maxDrawdown.toFixed(1)}% · currently{" "}
+                    {dd.currentDrawdown.toFixed(1)}% below peak.
                   </p>
                 ) : null}
               </SectionCard>
@@ -385,7 +471,11 @@ function ResearchPage() {
                     <Metric
                       label="Expected volatility"
                       value={`${horizon.volatility.toFixed(1)}%`}
-                      hint={Number.isFinite(horizon.cagr) ? `Implied CAGR ${horizon.cagr.toFixed(1)}%` : undefined}
+                      hint={
+                        Number.isFinite(horizon.cagr)
+                          ? `Implied CAGR ${horizon.cagr.toFixed(1)}%`
+                          : undefined
+                      }
                     />
                   </div>
                   {band ? (
@@ -396,9 +486,26 @@ function ResearchPage() {
                           <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                           <YAxis domain={["auto", "auto"]} width={56} tick={{ fontSize: 11 }} />
                           <Tooltip />
-                          <Area type="monotone" dataKey="high" stroke="none" fill="var(--color-primary)" fillOpacity={0.12} />
-                          <Area type="monotone" dataKey="low" stroke="none" fill="var(--color-background)" fillOpacity={0.9} />
-                          <Line type="monotone" dataKey="base" stroke="var(--color-primary)" dot={false} />
+                          <Area
+                            type="monotone"
+                            dataKey="high"
+                            stroke="none"
+                            fill="var(--color-primary)"
+                            fillOpacity={0.12}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="low"
+                            stroke="none"
+                            fill="var(--color-background)"
+                            fillOpacity={0.9}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="base"
+                            stroke="var(--color-primary)"
+                            dot={false}
+                          />
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
@@ -424,17 +531,25 @@ function ResearchPage() {
                         title="Key factors"
                         items={forecastNote.data.keyFactors.map((k) => `${k.factor}: ${k.effect}`)}
                       />
-                      <Bullets title="What would change it" items={forecastNote.data.whatWouldChangeIt} />
+                      <Bullets
+                        title="What would change it"
+                        items={forecastNote.data.whatWouldChangeIt}
+                      />
                     </div>
                   ) : null}
                 </>
               ) : (
-                <p className="mt-2 text-sm text-muted-foreground">Not enough history to model this symbol.</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Not enough history to model this symbol.
+                </p>
               )}
             </SectionCard>
 
             <div className="grid gap-4 xl:grid-cols-2">
-              <SectionCard title="Valuation lab" description="DCF sketch, multiples and margin of safety.">
+              <SectionCard
+                title="Valuation lab"
+                description="DCF sketch, multiples and margin of safety."
+              >
                 <Button size="sm" onClick={() => valuation.mutate()} disabled={valuation.isPending}>
                   <Sparkles className="mr-1.5 size-3.5" />
                   {valuation.isPending ? "Valuing…" : "Run valuation review"}
@@ -444,21 +559,40 @@ function ResearchPage() {
                     <Pill tone="brand">{valuation.data.verdict}</Pill>
                     <p>{valuation.data.verdictReason}</p>
                     <div className="grid gap-2 sm:grid-cols-2">
-                      <Metric label="Intrinsic value" value="" hint={valuation.data.intrinsicValue} />
-                      <Metric label="Margin of safety" value="" hint={valuation.data.marginOfSafety} />
+                      <Metric
+                        label="Intrinsic value"
+                        value=""
+                        hint={valuation.data.intrinsicValue}
+                      />
+                      <Metric
+                        label="Margin of safety"
+                        value=""
+                        hint={valuation.data.marginOfSafety}
+                      />
                       <Metric label="DCF" value="" hint={valuation.data.dcf} />
                       <Metric label="P/E comparison" value="" hint={valuation.data.peComparison} />
                       <Metric label="EV / EBITDA" value="" hint={valuation.data.evEbitda} />
                       <Metric label="PEG" value="" hint={valuation.data.peg} />
-                      <Metric label="Historical band" value="" hint={valuation.data.historicalValuation} />
-                      <Metric label="Sector comparison" value="" hint={valuation.data.sectorComparison} />
+                      <Metric
+                        label="Historical band"
+                        value=""
+                        hint={valuation.data.historicalValuation}
+                      />
+                      <Metric
+                        label="Sector comparison"
+                        value=""
+                        hint={valuation.data.sectorComparison}
+                      />
                     </div>
                     <Bullets title="Assumptions" items={valuation.data.assumptions} />
                   </div>
                 ) : null}
               </SectionCard>
 
-              <SectionCard title="Long-term investment analysis" description="AI research note across quality, moat and risk.">
+              <SectionCard
+                title="Long-term investment analysis"
+                description="AI research note across quality, moat and risk."
+              >
                 <Button size="sm" onClick={() => report.mutate()} disabled={report.isPending}>
                   <Sparkles className="mr-1.5 size-3.5" />
                   {report.isPending ? "Writing…" : "Generate research note"}
@@ -467,12 +601,24 @@ function ResearchPage() {
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
                     <Metric label="Business quality" value="" hint={report.data.businessQuality} />
                     <Metric label="Management" value="" hint={report.data.managementQuality} />
-                    <Metric label="Competitive advantage" value="" hint={report.data.competitiveAdvantage} />
-                    <Metric label="Financial strength" value="" hint={report.data.financialStrength} />
+                    <Metric
+                      label="Competitive advantage"
+                      value=""
+                      hint={report.data.competitiveAdvantage}
+                    />
+                    <Metric
+                      label="Financial strength"
+                      value=""
+                      hint={report.data.financialStrength}
+                    />
                     <Metric label="Growth potential" value="" hint={report.data.growthPotential} />
                     <Metric label="Innovation" value="" hint={report.data.innovation} />
                     <Metric label="Risk level" value="" hint={report.data.riskLevel} />
-                    <Metric label="Historical consistency" value="" hint={report.data.historicalConsistency} />
+                    <Metric
+                      label="Historical consistency"
+                      value=""
+                      hint={report.data.historicalConsistency}
+                    />
                     <Metric label="Sector outlook" value="" hint={report.data.sectorOutlook} />
                     <Metric label="Valuation" value="" hint={report.data.valuationAnalysis} />
                     <div className="sm:col-span-2">
@@ -488,11 +634,19 @@ function ResearchPage() {
             </div>
 
             {dossier.data?.news?.length ? (
-              <SectionCard title="Recent headlines" description="Company news from the last two weeks.">
+              <SectionCard
+                title="Recent headlines"
+                description="Company news from the last two weeks."
+              >
                 <ul className="divide-y divide-border/60">
                   {dossier.data.news.map((n) => (
                     <li key={n.id} className="py-2">
-                      <a className="text-sm hover:underline" href={n.link} target="_blank" rel="noreferrer">
+                      <a
+                        className="text-sm hover:underline"
+                        href={n.link}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         {n.title}
                       </a>
                       <p className="text-[11px] text-muted-foreground">{n.source}</p>

@@ -85,7 +85,10 @@ function GoalsPage() {
         <StatCard label="Goals reached" value={`${completed}/${rows.length}`} />
       </div>
 
-      <SectionCard title="New goal" description="Emergency fund, house deposit, travel, retirement…">
+      <SectionCard
+        title="New goal"
+        description="Emergency fund, house deposit, travel, retirement…"
+      >
         <form className="grid gap-3 md:grid-cols-5" onSubmit={submit}>
           <div className="space-y-1.5 md:col-span-2">
             <Label htmlFor="goal-name">Goal name</Label>
@@ -160,7 +163,10 @@ function GoalsPage() {
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {rows.map((goal) => {
             const pct = Number(goal.target_amount)
-              ? Math.min(100, Math.round((Number(goal.current_amount) / Number(goal.target_amount)) * 100))
+              ? Math.min(
+                  100,
+                  Math.round((Number(goal.current_amount) / Number(goal.target_amount)) * 100),
+                )
               : 0;
             return (
               <SectionCard

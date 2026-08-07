@@ -63,7 +63,7 @@ export const getFinancialNews = createServerFn({ method: "POST" })
   }))
   .handler(async ({ data }) => {
     const base =
-      'when:2d (site:moneycontrol.com OR site:economictimes.indiatimes.com OR site:livemint.com OR site:reuters.com OR site:bloomberg.com OR site:cnbc.com OR site:finance.yahoo.com OR site:marketwatch.com)';
+      "when:2d (site:moneycontrol.com OR site:economictimes.indiatimes.com OR site:livemint.com OR site:reuters.com OR site:bloomberg.com OR site:cnbc.com OR site:finance.yahoo.com OR site:marketwatch.com)";
     const query = data.topic ? `${data.topic} ${base}` : `stock market OR economy ${base}`;
     const items = await fetchNews(query, 30);
     return { fetchedAt: new Date().toISOString(), items };
