@@ -87,12 +87,18 @@ function WatchlistPage() {
       toast.error("Enter a symbol, e.g. TCS.NS");
       return;
     }
+    const target = form.target ? Number(form.target) : null;
+    const stop = form.stop ? Number(form.stop) : null;
+    if ((target !== null && !(target > 0)) || (stop !== null && !(stop > 0))) {
+      toast.error("Target and stop must be positive numbers.");
+      return;
+    }
     await addItem.mutateAsync({
       watchlist_id: activeId,
       symbol,
       name: form.name.trim() || STOCK_UNIVERSE.find((s) => s.symbol === symbol)?.name || symbol,
-      target_price: form.target ? Number(form.target) : null,
-      stop_loss: form.stop ? Number(form.stop) : null,
+      target_price: target,
+      stop_loss: stop,
     });
     setForm({ symbol: "", name: "", target: "", stop: "" });
     toast.success("Added to watchlist");

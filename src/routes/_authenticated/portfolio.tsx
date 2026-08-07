@@ -171,7 +171,7 @@ function PortfolioPage() {
       name: form.name.trim() || STOCK_UNIVERSE.find((s) => s.symbol === symbol)?.name || symbol,
       kind: form.kind,
       quantity,
-      avg_price: Number.isFinite(avg) ? avg : 0,
+      avg_price: Number.isFinite(avg) && avg > 0 ? avg : 0,
     });
     setForm({ symbol: "", name: "", kind: "stock", quantity: "", avg_price: "" });
     toast.success("Holding added");

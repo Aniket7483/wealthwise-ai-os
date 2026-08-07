@@ -62,7 +62,7 @@ function GoalsPage() {
     await add.mutateAsync({
       name: name.trim().slice(0, 80),
       target_amount: targetValue,
-      current_amount: Number(current) || 0,
+      current_amount: Math.max(Number(current) || 0, 0),
       target_date: date || null,
       priority,
     });
