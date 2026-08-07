@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus, Trash2, Sparkle, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
@@ -50,7 +50,11 @@ const SLICE_COLORS = [
 function PortfolioPage() {
   const holdings = useHoldings();
   const { add, remove } = useHoldingMutations();
-  const rows = holdings.data ?? [];
+  const rows = useMemo(() => holdings.data ?? [], [holdings.data]);
+
+  useEffect(() => {
+    if (holdings.error) toast.error("Could not load your holdings. Please retry.");
+  }, [holdings.error]);
 
   const quotes = useQuotesFor(rows.map((h) => ({ symbol: h.symbol, name: h.name })));
   const quoteMap = useMemo(() => {
@@ -66,12 +70,15 @@ function PortfolioPage() {
       rows.map((h) => {
         const q = quoteMap.get(h.symbol);
         const price = q && Number.isFinite(q.price) ? q.price : h.avg_price;
+        const prevClose =
+          q && Number.isFinite(q.prevClose) && q.prevClose > 0 ? q.prevClose : price;
         const invested = h.quantity * h.avg_price;
         const value = h.quantity * price;
         const pnl = value - invested;
         return {
           ...h,
           price,
+          dayChange: (price - prevClose) * h.quantity,
           invested,
           value,
           pnl,
@@ -89,7 +96,7 @@ function PortfolioPage() {
     (acc, p) => {
       acc.invested += p.invested;
       acc.value += p.value;
-      acc.day += (p.value * p.changePct) / 100;
+      acc.day += p.dayChange;
       return acc;
     },
     { invested: 0, value: 0, day: 0 },
